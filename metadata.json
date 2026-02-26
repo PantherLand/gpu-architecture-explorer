@@ -1,0 +1,5 @@
+{
+  "name": "GPU Architecture Explorer",
+  "description": "Interactive comparison of NVIDIA GPU architectures from A100 to Blackwell B300.",
+  "requestFramePermissions": []
+}
