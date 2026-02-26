@@ -1,434 +1,24 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Cpu, Info, Network, Layers } from "lucide-react";
-
-type ComponentData = {
-  title: string;
-  desc: string;
-  cost: string;
-  manufacturer: {
-    name: string;
-    url: string;
-  };
-  stats: { label: string; value: string }[];
-};
-
-type GPUConfig = {
-  id: string;
-  name: string;
-  generation: string;
-  process: string;
-  layout: "single" | "dual";
-  hbmStacks: number;
-  components: Record<string, ComponentData>;
-};
-
-const gpuConfigs: Record<string, GPUConfig> = {
-  A100: {
-    id: "A100",
-    name: "A100",
-    generation: "Ampere",
-    process: "TSMC 7nm",
-    layout: "single",
-    hbmStacks: 6,
-    components: {
-      package: {
-        title: "A100 Package",
-        desc: "The first GPU to feature Multi-Instance GPU (MIG) technology, built on the Ampere architecture.",
-        cost: "Est. $10,000",
-        manufacturer: { name: "TSMC", url: "https://www.tsmc.com" },
-        stats: [
-          { label: "Transistors", value: "54.2B" },
-          { label: "Die Size", value: "826 mm²" },
-          { label: "TDP", value: "400W" },
-        ],
-      },
-      die: {
-        title: "Ampere GA100 Die",
-        desc: "Massive monolithic die featuring 3rd Gen Tensor Cores and TF32 support.",
-        cost: "Integrated",
-        manufacturer: { name: "TSMC", url: "https://www.tsmc.com" },
-        stats: [
-          { label: "FP8 Performance", value: "N/A (Ampere)" },
-          { label: "FP32 Performance", value: "19.5 TFLOPS" },
-          { label: "Tensor Cores", value: "432 (3rd Gen)" },
-          { label: "Process Node", value: "7nm" },
-          { label: "Efficiency", value: "0.05 TFLOPS/W" },
-        ],
-      },
-      hbm: {
-        title: "HBM2e Subsystem",
-        desc: "6 stacks of HBM2e providing high bandwidth for data-intensive workloads.",
-        cost: "Est. $2,000",
-        manufacturer: { name: "Samsung / SK Hynix", url: "https://www.samsung.com" },
-        stats: [
-          { label: "Total Memory", value: "80 GB" },
-          { label: "Bandwidth", value: "2.0 TB/s" },
-          { label: "Bus Width", value: "5120-bit" },
-        ],
-      },
-      nvlink: {
-        title: "NVLink 3.0",
-        desc: "Third-generation interconnect for A100 clusters.",
-        cost: "Included",
-        manufacturer: { name: "NVIDIA", url: "https://www.nvidia.com" },
-        stats: [
-          { label: "Bandwidth", value: "600 GB/s" },
-          { label: "Links", value: "12" },
-        ],
-      },
-    },
-  },
-  H100: {
-    id: "H100",
-    name: "H100",
-    generation: "Hopper",
-    process: "TSMC 4N",
-    layout: "single",
-    hbmStacks: 6,
-    components: {
-      package: {
-        title: "H100 Package",
-        desc: "Hopper architecture introducing the Transformer Engine for massive LLM acceleration.",
-        cost: "Est. $25,000",
-        manufacturer: { name: "TSMC", url: "https://www.tsmc.com" },
-        stats: [
-          { label: "Transistors", value: "80B" },
-          { label: "Die Size", value: "814 mm²" },
-          { label: "TDP", value: "700W" },
-        ],
-      },
-      die: {
-        title: "Hopper GH100 Die",
-        desc: "Monolithic die with 4th Gen Tensor Cores and DPX instructions.",
-        cost: "Integrated",
-        manufacturer: { name: "TSMC", url: "https://www.tsmc.com" },
-        stats: [
-          { label: "FP8 Performance", value: "4,000 TFLOPS" },
-          { label: "FP32 Performance", value: "67 TFLOPS" },
-          { label: "Tensor Cores", value: "528 (4th Gen)" },
-          { label: "Process Node", value: "4nm (4N)" },
-          { label: "Efficiency", value: "5.71 TFLOPS/W" },
-        ],
-      },
-      hbm: {
-        title: "HBM3 Subsystem",
-        desc: "6 stacks of HBM3 memory providing a massive leap in bandwidth.",
-        cost: "Est. $4,000",
-        manufacturer: { name: "SK Hynix", url: "https://www.skhynix.com" },
-        stats: [
-          { label: "Total Memory", value: "80 GB" },
-          { label: "Bandwidth", value: "3.35 TB/s" },
-          { label: "Stacks", value: "6" },
-        ],
-      },
-      nvlink: {
-        title: "NVLink 4.0",
-        desc: "Fourth-generation interconnect.",
-        cost: "Included",
-        manufacturer: { name: "NVIDIA", url: "https://www.nvidia.com" },
-        stats: [
-          { label: "Bandwidth", value: "900 GB/s" },
-          { label: "Links", value: "18" },
-        ],
-      },
-    },
-  },
-  H200: {
-    id: "H200",
-    name: "H200",
-    generation: "Hopper",
-    process: "TSMC 4N",
-    layout: "single",
-    hbmStacks: 6,
-    components: {
-      package: {
-        title: "H200 Package",
-        desc: "Upgraded Hopper GPU with HBM3e for enhanced memory capacity and bandwidth.",
-        cost: "Est. $30,000",
-        manufacturer: { name: "TSMC", url: "https://www.tsmc.com" },
-        stats: [
-          { label: "Transistors", value: "80B" },
-          { label: "TDP", value: "700W" },
-          { label: "Memory Type", value: "HBM3e" },
-        ],
-      },
-      die: {
-        title: "Hopper GH100 Die",
-        desc: "Same powerful die as H100 but paired with faster memory.",
-        cost: "Integrated",
-        manufacturer: { name: "TSMC", url: "https://www.tsmc.com" },
-        stats: [
-          { label: "FP8 Performance", value: "4,000 TFLOPS" },
-          { label: "FP32 Performance", value: "67 TFLOPS" },
-          { label: "Tensor Cores", value: "528 (4th Gen)" },
-          { label: "Process Node", value: "4nm (4N)" },
-          { label: "Efficiency", value: "5.71 TFLOPS/W" },
-        ],
-      },
-      hbm: {
-        title: "HBM3e Subsystem",
-        desc: "6 stacks of ultra-fast HBM3e memory.",
-        cost: "Est. $6,000",
-        manufacturer: { name: "Micron / SK Hynix", url: "https://www.micron.com" },
-        stats: [
-          { label: "Total Memory", value: "141 GB" },
-          { label: "Bandwidth", value: "4.8 TB/s" },
-          { label: "Stacks", value: "6" },
-        ],
-      },
-      nvlink: {
-        title: "NVLink 4.0",
-        desc: "High-speed interconnect for H200 clusters.",
-        cost: "Included",
-        manufacturer: { name: "NVIDIA", url: "https://www.nvidia.com" },
-        stats: [
-          { label: "Bandwidth", value: "900 GB/s" },
-          { label: "Links", value: "18" },
-        ],
-      },
-    },
-  },
-  B100: {
-    id: "B100",
-    name: "B100",
-    generation: "Blackwell",
-    process: "TSMC 4NP",
-    layout: "dual",
-    hbmStacks: 8,
-    components: {
-      package: {
-        title: "B100 Package",
-        desc: "Dual-reticle design with 208 billion transistors, manufactured on TSMC 4NP process.",
-        cost: "Est. $30,000 - $35,000",
-        manufacturer: { name: "TSMC (Foundry)", url: "https://www.tsmc.com" },
-        stats: [
-          { label: "Transistors", value: "208B" },
-          { label: "TDP", value: "700W" },
-          { label: "Total Memory", value: "192 GB HBM3e" },
-        ],
-      },
-      die0: {
-        title: "Compute Die 0",
-        desc: "One half of the Blackwell GPU, featuring 5th Gen Tensor Cores.",
-        cost: "Integrated",
-        manufacturer: { name: "TSMC", url: "https://www.tsmc.com" },
-        stats: [
-          { label: "FP8 Performance", value: "3,500 TFLOPS" },
-          { label: "FP32 Performance", value: "30 TFLOPS" },
-          { label: "Tensor Cores", value: "640 (5th Gen)" },
-          { label: "SMs", value: "96 (per die, ~192 total)" },
-          { label: "Efficiency", value: "10.0 TFLOPS/W" },
-        ],
-      },
-      die1: {
-        title: "Compute Die 1",
-        desc: "The second half of the Blackwell GPU, perfectly symmetrical to Die 0.",
-        cost: "Integrated",
-        manufacturer: { name: "TSMC", url: "https://www.tsmc.com" },
-        stats: [
-          { label: "FP8 Performance", value: "3,500 TFLOPS" },
-          { label: "FP32 Performance", value: "30 TFLOPS" },
-          { label: "Tensor Cores", value: "640 (5th Gen)" },
-          { label: "SMs", value: "96 (per die, ~192 total)" },
-          { label: "Efficiency", value: "10.0 TFLOPS/W" },
-        ],
-      },
-      hbi: {
-        title: "NV-HBI",
-        desc: "Ultra-fast die-to-die interconnect (10 TB/s).",
-        cost: "Proprietary",
-        manufacturer: { name: "TSMC (CoWoS-L)", url: "https://www.tsmc.com" },
-        stats: [
-          { label: "Bandwidth", value: "10 TB/s" },
-          { label: "Latency", value: "Ultra-low" },
-          { label: "Coherency", value: "Full Cache" },
-        ],
-      },
-      hbm: {
-        title: "HBM3e Subsystem",
-        desc: "8 stacks of HBM3e memory.",
-        cost: "Est. $7,000",
-        manufacturer: { name: "SK Hynix / Micron", url: "https://www.skhynix.com" },
-        stats: [
-          { label: "Total Memory", value: "192 GB" },
-          { label: "Bandwidth", value: "8.0 TB/s" },
-          { label: "Stacks", value: "8" },
-        ],
-      },
-      nvlink: {
-        title: "NVLink 5.0",
-        desc: "Fifth-generation interconnect.",
-        cost: "Included",
-        manufacturer: { name: "NVIDIA", url: "https://www.nvidia.com" },
-        stats: [
-          { label: "Bandwidth", value: "1.8 TB/s" },
-          { label: "Links", value: "18" },
-        ],
-      },
-    },
-  },
-  B200: {
-    id: "B200",
-    name: "B200",
-    generation: "Blackwell",
-    process: "TSMC 4NP",
-    layout: "dual",
-    hbmStacks: 8,
-    components: {
-      package: {
-        title: "B200 Package",
-        desc: "Full-performance Blackwell GPU with higher TDP and clock speeds.",
-        cost: "Est. $40,000",
-        manufacturer: { name: "TSMC (Foundry)", url: "https://www.tsmc.com" },
-        stats: [
-          { label: "Transistors", value: "208B" },
-          { label: "TDP", value: "1000W" },
-          { label: "Total Memory", value: "192 GB HBM3e" },
-        ],
-      },
-      die0: {
-        title: "Compute Die 0",
-        desc: "High-clock Blackwell compute die.",
-        cost: "Integrated",
-        manufacturer: { name: "TSMC", url: "https://www.tsmc.com" },
-        stats: [
-          { label: "FP8 Performance", value: "4,500 TFLOPS" },
-          { label: "FP32 Performance", value: "40 TFLOPS" },
-          { label: "Tensor Cores", value: "640 (5th Gen)" },
-          { label: "SMs", value: "96–104 (per die, ~192–208 total)" },
-          { label: "Efficiency", value: "9.0 TFLOPS/W" },
-        ],
-      },
-      die1: {
-        title: "Compute Die 1",
-        desc: "High-clock Blackwell compute die.",
-        cost: "Integrated",
-        manufacturer: { name: "TSMC", url: "https://www.tsmc.com" },
-        stats: [
-          { label: "FP8 Performance", value: "4,500 TFLOPS" },
-          { label: "FP32 Performance", value: "40 TFLOPS" },
-          { label: "Tensor Cores", value: "640 (5th Gen)" },
-          { label: "SMs", value: "96–104 (per die, ~192–208 total)" },
-          { label: "Efficiency", value: "9.0 TFLOPS/W" },
-        ],
-      },
-      hbi: {
-        title: "NV-HBI",
-        desc: "10 TB/s die-to-die bridge.",
-        cost: "Proprietary",
-        manufacturer: { name: "TSMC", url: "https://www.tsmc.com" },
-        stats: [
-          { label: "Bandwidth", value: "10 TB/s" },
-          { label: "Latency", value: "Ultra-low" },
-        ],
-      },
-      hbm: {
-        title: "HBM3e Subsystem",
-        desc: "8 stacks of HBM3e.",
-        cost: "Est. $8,000",
-        manufacturer: { name: "SK Hynix", url: "https://www.skhynix.com" },
-        stats: [
-          { label: "Total Memory", value: "192 GB" },
-          { label: "Bandwidth", value: "8.0 TB/s" },
-          { label: "Stacks", value: "8" },
-        ],
-      },
-      nvlink: {
-        title: "NVLink 5.0",
-        desc: "1.8 TB/s interconnect.",
-        cost: "Included",
-        manufacturer: { name: "NVIDIA", url: "https://www.nvidia.com" },
-        stats: [
-          { label: "Bandwidth", value: "1.8 TB/s" },
-          { label: "Links", value: "18" },
-        ],
-      },
-    },
-  },
-  B300: {
-    id: "B300",
-    name: "B300",
-    generation: "Blackwell Ultra",
-    process: "TSMC 4NP",
-    layout: "dual",
-    hbmStacks: 12,
-    components: {
-      package: {
-        title: "B300 (Blackwell Ultra)",
-        desc: "The ultimate Blackwell iteration with expanded memory capacity.",
-        cost: "Est. $50,000+",
-        manufacturer: { name: "TSMC", url: "https://www.tsmc.com" },
-        stats: [
-          { label: "Transistors", value: "208B+" },
-          { label: "TDP", value: "1200W" },
-          { label: "Total Memory", value: "288 GB HBM3e" },
-        ],
-      },
-      die0: {
-        title: "Compute Die 0",
-        desc: "Blackwell Ultra compute die.",
-        cost: "Integrated",
-        manufacturer: { name: "TSMC", url: "https://www.tsmc.com" },
-        stats: [
-          { label: "FP8 Performance", value: "5,000 TFLOPS" },
-          { label: "FP32 Performance", value: "45 TFLOPS" },
-          { label: "Tensor Cores", value: "640 (5th Gen)" },
-          { label: "SMs", value: "TBD (dual-die total)" },
-          { label: "Efficiency", value: "8.33 TFLOPS/W" },
-        ],
-      },
-      die1: {
-        title: "Compute Die 1",
-        desc: "Blackwell Ultra compute die.",
-        cost: "Integrated",
-        manufacturer: { name: "TSMC", url: "https://www.tsmc.com" },
-        stats: [
-          { label: "FP8 Performance", value: "5,000 TFLOPS" },
-          { label: "FP32 Performance", value: "45 TFLOPS" },
-          { label: "Tensor Cores", value: "640 (5th Gen)" },
-          { label: "SMs", value: "TBD (dual-die total)" },
-          { label: "Efficiency", value: "8.33 TFLOPS/W" },
-        ],
-      },
-      hbi: {
-        title: "NV-HBI",
-        desc: "10 TB/s bridge.",
-        cost: "Proprietary",
-        manufacturer: { name: "TSMC", url: "https://www.tsmc.com" },
-        stats: [{ label: "Bandwidth", value: "10 TB/s" }],
-      },
-      hbm: {
-        title: "HBM3e Subsystem",
-        desc: "12 stacks of HBM3e memory (12-high stacks).",
-        cost: "Est. $12,000",
-        manufacturer: { name: "SK Hynix / Micron", url: "https://www.skhynix.com" },
-        stats: [
-          { label: "Total Memory", value: "288 GB" },
-          { label: "Bandwidth", value: "8.0 TB/s" },
-          { label: "Stacks", value: "12" },
-        ],
-      },
-      nvlink: {
-        title: "NVLink 5.0",
-        desc: "1.8 TB/s interconnect.",
-        cost: "Included",
-        manufacturer: { name: "NVIDIA", url: "https://www.nvidia.com" },
-        stats: [
-          { label: "Bandwidth", value: "1.8 TB/s" },
-          { label: "Links", value: "18" },
-        ],
-      },
-    },
-  },
-};
+import { Cpu, Info, Network, Layers, ChevronRight } from "lucide-react";
+import { vendorConfigs } from "./data/gpuData";
+import { Vendor } from "./types";
 
 export default function App() {
+  const [activeVendor, setActiveVendor] = useState<Vendor>("NVIDIA");
   const [activeGpu, setActiveGpu] = useState<string>("B100");
   const [activeComponent, setActiveComponent] = useState<string>("package");
 
-  const config = gpuConfigs[activeGpu];
+  const vendor = vendorConfigs[activeVendor];
+  const config = vendor.gpus[activeGpu] || Object.values(vendor.gpus)[0];
   const activeData = config.components[activeComponent] || config.components["package"];
+
+  const handleVendorChange = (v: Vendor) => {
+    setActiveVendor(v);
+    const firstGpuId = Object.keys(vendorConfigs[v].gpus)[0];
+    setActiveGpu(firstGpuId);
+    setActiveComponent("package");
+  };
 
   const handleGpuChange = (gpuId: string) => {
     setActiveGpu(gpuId);
@@ -438,27 +28,51 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-gray-300 font-sans p-4 md:p-8 flex flex-col">
       {/* Header */}
-      <header className="mb-8 border-b border-[#2a2a2a] pb-6 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
-        <div>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tighter text-white mb-2">
-            NVIDIA GPU <span className="text-[#76b900]">ARCHITECTURE</span> EXPLORER
-          </h1>
-          <p className="text-gray-500 font-mono text-sm tracking-widest uppercase">
-            Interactive Comparison // A100 to B300
-          </p>
+      <header className="mb-8 border-b border-[#2a2a2a] pb-6 flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6">
+        <div className="flex flex-col gap-4">
+          <div>
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tighter text-white mb-2">
+              GPU <span style={{ color: vendor.color }}>ARCHITECTURE</span> EXPLORER
+            </h1>
+            <p className="text-gray-500 font-mono text-sm tracking-widest uppercase">
+              Interactive Comparison // {activeVendor} {config.generation}
+            </p>
+          </div>
+
+          {/* Vendor Selector */}
+          <div className="flex gap-2 p-1 bg-[#1a1a1a] rounded-lg border border-[#2a2a2a] w-fit">
+            {(["NVIDIA", "AMD"] as Vendor[]).map((v) => (
+              <button
+                key={v}
+                onClick={() => handleVendorChange(v)}
+                className={`px-6 py-1.5 rounded-md text-xs font-bold transition-all ${
+                  activeVendor === v
+                    ? `bg-white text-black shadow-lg`
+                    : "text-gray-500 hover:text-gray-300"
+                }`}
+              >
+                {v}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* GPU Tabs */}
         <div className="flex flex-wrap gap-2">
-          {Object.keys(gpuConfigs).map((gpuId) => (
+          {Object.keys(vendor.gpus).map((gpuId) => (
             <button
               key={gpuId}
               onClick={() => handleGpuChange(gpuId)}
               className={`px-4 py-2 text-xs font-mono rounded border transition-all ${
                 activeGpu === gpuId
-                  ? "border-[#76b900] text-[#76b900] bg-[#76b900]/10 shadow-[0_0_15px_rgba(118,185,0,0.2)]"
+                  ? `text-white bg-opacity-20 shadow-[0_0_15px_rgba(255,255,255,0.1)]`
                   : "border-[#2a2a2a] text-gray-500 hover:border-gray-400"
               }`}
+              style={{
+                borderColor: activeGpu === gpuId ? vendor.color : "#2a2a2a",
+                backgroundColor: activeGpu === gpuId ? `${vendor.color}22` : "transparent",
+                color: activeGpu === gpuId ? vendor.color : undefined,
+              }}
             >
               {gpuId}
             </button>
@@ -475,9 +89,13 @@ export default function App() {
               onMouseEnter={() => setActiveComponent("package")}
               className={`px-3 py-1 text-[10px] font-mono rounded border transition-colors cursor-pointer ${
                 activeComponent === "package"
-                  ? "border-[#76b900] text-[#76b900] bg-[#76b900]/10"
+                  ? "text-white"
                   : "border-[#2a2a2a] text-gray-500 hover:border-gray-500"
               }`}
+              style={{
+                borderColor: activeComponent === "package" ? vendor.color : "#2a2a2a",
+                backgroundColor: activeComponent === "package" ? `${vendor.color}22` : "transparent",
+              }}
             >
               FULL PACKAGE
             </button>
@@ -485,18 +103,26 @@ export default function App() {
               onMouseEnter={() => setActiveComponent("nvlink")}
               className={`px-3 py-1 text-[10px] font-mono rounded border transition-colors cursor-pointer ${
                 activeComponent === "nvlink"
-                  ? "border-[#76b900] text-[#76b900] bg-[#76b900]/10"
+                  ? "text-white"
                   : "border-[#2a2a2a] text-gray-500 hover:border-gray-500"
               }`}
+              style={{
+                borderColor: activeComponent === "nvlink" ? vendor.color : "#2a2a2a",
+                backgroundColor: activeComponent === "nvlink" ? `${vendor.color}22` : "transparent",
+              }}
             >
-              NVLINK
+              {activeVendor === "NVIDIA" ? "NVLINK" : "INFINITY FABRIC"}
             </button>
           </div>
 
           {/* Architecture Badge */}
           <div className="absolute top-4 right-4 text-right">
-            <div className="text-[#76b900] font-bold text-xl tracking-tight">{config.generation}</div>
-            <div className="text-gray-500 font-mono text-[10px] uppercase tracking-widest">{config.process}</div>
+            <div className="font-bold text-xl tracking-tight" style={{ color: vendor.color }}>
+              {config.generation}
+            </div>
+            <div className="text-gray-500 font-mono text-[10px] uppercase tracking-widest">
+              {config.process}
+            </div>
           </div>
 
           {/* The Chip Diagram */}
@@ -504,10 +130,12 @@ export default function App() {
             {/* Package Outline */}
             <div
               className={`absolute inset-0 rounded-2xl border-2 transition-all duration-300 cursor-crosshair ${
-                activeComponent === "package"
-                  ? "border-[#76b900] bg-[#76b900]/5 shadow-[0_0_30px_rgba(118,185,0,0.1)]"
-                  : "border-[#2a2a2a] bg-[#141414]"
+                activeComponent === "package" ? "shadow-[0_0_30px_rgba(255,255,255,0.05)]" : "bg-[#141414]"
               }`}
+              style={{
+                borderColor: activeComponent === "package" ? vendor.color : "#2a2a2a",
+                backgroundColor: activeComponent === "package" ? `${vendor.color}05` : "#141414",
+              }}
               onMouseEnter={() => setActiveComponent("package")}
             ></div>
 
@@ -526,10 +154,11 @@ export default function App() {
                     <div
                       key={`hbm-l-${i}`}
                       className={`flex-1 rounded border hbm-block flex items-center justify-center transition-all duration-300 ${
-                        activeComponent === "hbm"
-                          ? "border-[#76b900] shadow-[0_0_10px_rgba(118,185,0,0.3)]"
-                          : "border-[#333]"
+                        activeComponent === "hbm" ? "shadow-[0_0_10px_rgba(255,255,255,0.1)]" : "border-[#333]"
                       }`}
+                      style={{
+                        borderColor: activeComponent === "hbm" ? vendor.color : "#333",
+                      }}
                     >
                       <span className="text-[10px] font-mono text-gray-500 rotate-[-90deg]">HBM</span>
                     </div>
@@ -539,13 +168,14 @@ export default function App() {
                 {/* Die Area */}
                 <div className="flex-1 flex relative">
                   {config.layout === "single" ? (
-                    /* Single Die Layout (A100, H100, H200) */
                     <div
                       className={`flex-1 rounded-xl border flex flex-col overflow-hidden transition-all duration-300 cursor-crosshair ${
-                        activeComponent === "die"
-                          ? "border-[#76b900] z-20 shadow-[0_0_20px_rgba(118,185,0,0.2)] bg-[#76b900]/5"
-                          : "border-[#333] z-10 bg-[#1a1a1a]"
+                        activeComponent === "die" ? "z-20 shadow-[0_0_20px_rgba(255,255,255,0.1)]" : "z-10 bg-[#1a1a1a]"
                       }`}
+                      style={{
+                        borderColor: activeComponent === "die" ? vendor.color : "#333",
+                        backgroundColor: activeComponent === "die" ? `${vendor.color}05` : "#1a1a1a",
+                      }}
                       onMouseEnter={() => setActiveComponent("die")}
                     >
                       <div className="bg-[#222] text-center py-1 text-xs font-mono border-b border-[#333] text-gray-400 uppercase">
@@ -553,20 +183,21 @@ export default function App() {
                       </div>
                       <div className="flex-1 die-grid relative">
                         <div className="absolute inset-0 flex items-center justify-center opacity-20">
-                          <Cpu size={80} className={activeComponent === "die" ? "text-[#76b900]" : "text-white"} />
+                          <Cpu size={80} style={{ color: activeComponent === "die" ? vendor.color : "white" }} />
                         </div>
                       </div>
                     </div>
-                  ) : (
-                    /* Dual Die Layout (B100, B200, B300) */
+                  ) : config.layout === "dual" ? (
                     <div className="flex-1 flex relative">
                       {/* Die 0 */}
                       <div
                         className={`flex-1 rounded-l-xl border-y border-l flex flex-col overflow-hidden transition-all duration-300 cursor-crosshair ${
-                          activeComponent === "die0"
-                            ? "border-[#76b900] z-20 shadow-[0_0_20px_rgba(118,185,0,0.2)] bg-[#76b900]/5"
-                            : "border-[#333] z-10 bg-[#1a1a1a]"
+                          activeComponent === "die0" ? "z-20 shadow-[0_0_20px_rgba(255,255,255,0.1)]" : "z-10 bg-[#1a1a1a]"
                         }`}
+                        style={{
+                          borderColor: activeComponent === "die0" ? vendor.color : "#333",
+                          backgroundColor: activeComponent === "die0" ? `${vendor.color}05` : "#1a1a1a",
+                        }}
                         onMouseEnter={() => setActiveComponent("die0")}
                       >
                         <div className="bg-[#222] text-center py-1 text-[10px] font-mono border-b border-[#333] text-gray-400">
@@ -574,12 +205,12 @@ export default function App() {
                         </div>
                         <div className="flex-1 die-grid relative">
                           <div className="absolute inset-0 flex items-center justify-center opacity-20">
-                            <Cpu size={48} className={activeComponent === "die0" ? "text-[#76b900]" : "text-white"} />
+                            <Cpu size={48} style={{ color: activeComponent === "die0" ? vendor.color : "white" }} />
                           </div>
                         </div>
                       </div>
 
-                      {/* NV-HBI Bridge */}
+                      {/* Interconnect Bridge */}
                       <div
                         className={`w-12 md:w-20 -mx-2 z-30 flex flex-col justify-center items-center cursor-crosshair transition-all duration-300 ${
                           activeComponent === "hbi" ? "scale-110" : ""
@@ -588,36 +219,39 @@ export default function App() {
                       >
                         <div
                           className={`h-3/4 w-full rounded border flex items-center justify-center bg-[#1a1a1a] transition-all duration-300 ${
-                            activeComponent === "hbi" ? "border-[#76b900] shadow-[0_0_15px_rgba(118,185,0,0.4)]" : "border-[#444]"
+                            activeComponent === "hbi" ? "shadow-[0_0_15px_rgba(255,255,255,0.2)]" : "border-[#444]"
                           }`}
+                          style={{ borderColor: activeComponent === "hbi" ? vendor.color : "#444" }}
                         >
                           <div className="flex flex-col gap-1 w-full px-2">
                             {[1, 2, 3, 4, 5, 6].map((i) => (
                               <div
                                 key={`link-${i}`}
-                                className={`h-0.5 w-full transition-all duration-300 ${
-                                  activeComponent === "hbi" ? "bg-[#76b900]" : "bg-[#444]"
-                                }`}
+                                className={`h-0.5 w-full transition-all duration-300`}
+                                style={{ backgroundColor: activeComponent === "hbi" ? vendor.color : "#444" }}
                               ></div>
                             ))}
                           </div>
                         </div>
                         <div
                           className={`absolute text-[9px] font-mono bg-[#0a0a0a] px-1 rounded transition-all duration-300 ${
-                            activeComponent === "hbi" ? "text-[#76b900]" : "text-gray-500"
+                            activeComponent === "hbi" ? "text-white" : "text-gray-500"
                           }`}
+                          style={{ color: activeComponent === "hbi" ? vendor.color : undefined }}
                         >
-                          NV-HBI
+                          {activeVendor === "NVIDIA" ? "NV-HBI" : "IF-LINK"}
                         </div>
                       </div>
 
                       {/* Die 1 */}
                       <div
                         className={`flex-1 rounded-r-xl border-y border-r flex flex-col overflow-hidden transition-all duration-300 cursor-crosshair ${
-                          activeComponent === "die1"
-                            ? "border-[#76b900] z-20 shadow-[0_0_20px_rgba(118,185,0,0.2)] bg-[#76b900]/5"
-                            : "border-[#333] z-10 bg-[#1a1a1a]"
+                          activeComponent === "die1" ? "z-20 shadow-[0_0_20px_rgba(255,255,255,0.1)]" : "z-10 bg-[#1a1a1a]"
                         }`}
+                        style={{
+                          borderColor: activeComponent === "die1" ? vendor.color : "#333",
+                          backgroundColor: activeComponent === "die1" ? `${vendor.color}05` : "#1a1a1a",
+                        }}
                         onMouseEnter={() => setActiveComponent("die1")}
                       >
                         <div className="bg-[#222] text-center py-1 text-[10px] font-mono border-b border-[#333] text-gray-400">
@@ -625,9 +259,37 @@ export default function App() {
                         </div>
                         <div className="flex-1 die-grid relative">
                           <div className="absolute inset-0 flex items-center justify-center opacity-20">
-                            <Cpu size={48} className={activeComponent === "die1" ? "text-[#76b900]" : "text-white"} />
+                            <Cpu size={48} style={{ color: activeComponent === "die1" ? vendor.color : "white" }} />
                           </div>
                         </div>
+                      </div>
+                    </div>
+                  ) : (
+                    /* Chiplet Layout (MI300X) */
+                    <div
+                      className={`flex-1 rounded-xl border flex flex-col overflow-hidden transition-all duration-300 cursor-crosshair ${
+                        activeComponent === "die" ? "z-20 shadow-[0_0_20px_rgba(255,255,255,0.1)]" : "z-10 bg-[#1a1a1a]"
+                      }`}
+                      style={{
+                        borderColor: activeComponent === "die" ? vendor.color : "#333",
+                        backgroundColor: activeComponent === "die" ? `${vendor.color}05` : "#1a1a1a",
+                      }}
+                      onMouseEnter={() => setActiveComponent("die")}
+                    >
+                      <div className="bg-[#222] text-center py-1 text-[10px] font-mono border-b border-[#333] text-gray-400">
+                        CHIPLET GRID (XCD + IOD)
+                      </div>
+                      <div className="flex-1 p-4 grid grid-cols-4 grid-rows-2 gap-2">
+                        {Array.from({ length: 8 }).map((_, i) => (
+                          <div
+                            key={`xcd-${i}`}
+                            className={`rounded-sm border border-[#333] bg-[#222] flex items-center justify-center transition-all duration-300 ${
+                              activeComponent === "die" ? "border-white/20" : ""
+                            }`}
+                          >
+                            <span className="text-[8px] font-mono text-gray-600">XCD</span>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   )}
@@ -644,10 +306,11 @@ export default function App() {
                     <div
                       key={`hbm-r-${i}`}
                       className={`flex-1 rounded border hbm-block flex items-center justify-center transition-all duration-300 ${
-                        activeComponent === "hbm"
-                          ? "border-[#76b900] shadow-[0_0_10px_rgba(118,185,0,0.3)]"
-                          : "border-[#333]"
+                        activeComponent === "hbm" ? "shadow-[0_0_10px_rgba(255,255,255,0.1)]" : "border-[#333]"
                       }`}
+                      style={{
+                        borderColor: activeComponent === "hbm" ? vendor.color : "#333",
+                      }}
                     >
                       <span className="text-[10px] font-mono text-gray-500 rotate-[90deg]">HBM</span>
                     </div>
@@ -655,39 +318,45 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Bottom Section: NVLink & PCIe */}
+              {/* Bottom Section: Interconnect & Interface */}
               <div className="h-16 md:h-20 flex gap-4 px-16 md:px-24">
                 <div
                   className={`flex-[2] rounded border flex items-center justify-center transition-all duration-300 cursor-crosshair ${
-                    activeComponent === "nvlink"
-                      ? "border-[#76b900] bg-[#76b900]/10 shadow-[0_0_15px_rgba(118,185,0,0.2)]"
-                      : "border-[#333] bg-[#1a1a1a]"
+                    activeComponent === "nvlink" ? "shadow-[0_0_15px_rgba(255,255,255,0.05)]" : "border-[#333] bg-[#1a1a1a]"
                   }`}
+                  style={{
+                    borderColor: activeComponent === "nvlink" ? vendor.color : "#333",
+                    backgroundColor: activeComponent === "nvlink" ? `${vendor.color}11` : "#1a1a1a",
+                  }}
                   onMouseEnter={() => setActiveComponent("nvlink")}
                 >
                   <div className="flex items-center gap-2">
-                    <Network size={16} className={activeComponent === "nvlink" ? "text-[#76b900]" : "text-gray-500"} />
+                    <Network size={16} style={{ color: activeComponent === "nvlink" ? vendor.color : "#666" }} />
                     <span
                       className={`font-mono text-[10px] md:text-xs ${
-                        activeComponent === "nvlink" ? "text-[#76b900]" : "text-gray-400"
+                        activeComponent === "nvlink" ? "text-white" : "text-gray-400"
                       }`}
+                      style={{ color: activeComponent === "nvlink" ? vendor.color : undefined }}
                     >
-                      NVLink Interconnect
+                      {activeVendor === "NVIDIA" ? "NVLink Interconnect" : "Infinity Fabric"}
                     </span>
                   </div>
                 </div>
                 <div
                   className={`flex-1 rounded border flex items-center justify-center transition-all duration-300 cursor-crosshair ${
-                    activeComponent === "pcie"
-                      ? "border-[#76b900] bg-[#76b900]/10 shadow-[0_0_15px_rgba(118,185,0,0.2)]"
-                      : "border-[#333] bg-[#1a1a1a]"
+                    activeComponent === "pcie" ? "shadow-[0_0_15px_rgba(255,255,255,0.05)]" : "border-[#333] bg-[#1a1a1a]"
                   }`}
+                  style={{
+                    borderColor: activeComponent === "pcie" ? vendor.color : "#333",
+                    backgroundColor: activeComponent === "pcie" ? `${vendor.color}11` : "#1a1a1a",
+                  }}
                   onMouseEnter={() => setActiveComponent("pcie")}
                 >
                   <span
                     className={`font-mono text-[10px] md:text-xs ${
-                      activeComponent === "pcie" ? "text-[#76b900]" : "text-gray-400"
+                      activeComponent === "pcie" ? "text-white" : "text-gray-400"
                     }`}
+                    style={{ color: activeComponent === "pcie" ? vendor.color : undefined }}
                   >
                     PCIe Interface
                   </span>
@@ -698,14 +367,21 @@ export default function App() {
         </div>
 
         {/* Info Panel */}
-        <div className="tech-border rounded-xl p-6 flex flex-col relative overflow-hidden h-full min-h-[600px]">
+        <div className="tech-border rounded-xl p-6 flex flex-col relative overflow-hidden">
           {/* Decorative background element */}
           <div className="absolute -right-20 -top-20 opacity-5 pointer-events-none">
             <Cpu size={250} />
           </div>
 
           <div className="flex items-center gap-3 mb-6 pb-4 border-b border-[#2a2a2a]">
-            <div className="p-2 bg-[#76b900]/10 rounded border border-[#76b900]/30 text-[#76b900]">
+            <div
+              className="p-2 rounded border text-white"
+              style={{
+                backgroundColor: `${vendor.color}11`,
+                borderColor: `${vendor.color}44`,
+                color: vendor.color,
+              }}
+            >
               <Info size={20} />
             </div>
             <h2 className="text-xl font-bold tracking-tight text-white uppercase">Component Details</h2>
@@ -713,7 +389,7 @@ export default function App() {
 
           <AnimatePresence mode="wait">
             <motion.div
-              key={`${activeGpu}-${activeComponent}`}
+              key={`${activeVendor}-${activeGpu}-${activeComponent}`}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
@@ -721,7 +397,9 @@ export default function App() {
               className="flex flex-col h-full"
             >
               <div className="flex items-center justify-between mb-2">
-                <h3 className="text-2xl font-bold text-[#76b900]">{activeData.title}</h3>
+                <h3 className="text-2xl font-bold" style={{ color: vendor.color }}>
+                  {activeData.title}
+                </h3>
                 <div className="px-2 py-0.5 bg-[#1a1a1a] border border-[#2a2a2a] rounded text-[10px] font-mono text-gray-500">
                   {activeGpu}
                 </div>
@@ -739,7 +417,8 @@ export default function App() {
                     href={activeData.manufacturer.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[#76b900] font-mono text-xs hover:underline flex items-center gap-1"
+                    className="font-mono text-xs hover:underline flex items-center gap-1"
+                    style={{ color: vendor.color }}
                   >
                     {activeData.manufacturer.name}
                   </a>
@@ -765,4 +444,5 @@ export default function App() {
     </div>
   );
 }
+
 
