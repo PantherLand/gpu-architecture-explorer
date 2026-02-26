@@ -6,6 +6,8 @@
 
 This contains everything you need to run your app locally.
 
+Live demo (GitHub Pages): https://pantherland.github.io/gpu-architecture-explorer/
+
 View your app in AI Studio: https://ai.studio/apps/3342b613-acb9-4f02-9c16-f2953b35e69e
 
 ## Run Locally
