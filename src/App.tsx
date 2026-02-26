@@ -704,7 +704,7 @@ export default function App() {
         </div>
 
         {/* Info Panel */}
-        <div className="tech-border rounded-xl p-6 flex flex-col relative overflow-hidden">
+        <div className="tech-border rounded-xl p-6 flex flex-col relative overflow-hidden h-full min-h-[600px]">
           {/* Decorative background element */}
           <div className="absolute -right-20 -top-20 opacity-5 pointer-events-none">
             <Cpu size={250} />
