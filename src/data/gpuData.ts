@@ -584,5 +584,62 @@ export const vendorConfigs: Record<string, VendorConfig> = {
         },
       },
     }
+  },
+  Google: {
+    name: "Google",
+    color: "#4285F4",
+    gpus: {
+      TPU_v5p: {
+        id: "TPU_v5p",
+        name: "TPU v5p",
+        generation: "v5",
+        process: "TSMC 5nm",
+        layout: "single",
+        hbmStacks: 4,
+        components: {
+          package: {
+            title: "TPU v5p Package",
+            desc: "Google's most powerful and scalable AI accelerator.",
+            cost: "Internal Use Only",
+            manufacturer: { name: "Google / TSMC", url: "https://cloud.google.com/tpu" },
+            stats: [
+              { label: "Memory", value: "95GB HBM3" },
+              { label: "Bandwidth", value: "2.76 TB/s" },
+            ],
+          },
+          die: {
+            title: "v5p Compute Die",
+            desc: "Features dual Matrix Multiply Units (MXUs).",
+            cost: "Integrated",
+            manufacturer: { name: "TSMC", url: "https://www.tsmc.com" },
+            stats: [
+              { label: "FP32 Performance", value: "114 TFLOPS" },
+              { label: "BF16 Performance", value: "459 TFLOPS" },
+              { label: "Efficiency", value: "Unknown" },
+            ],
+          },
+          hbm: {
+            title: "HBM3 Subsystem",
+            desc: "4 stacks of high-bandwidth memory.",
+            cost: "Integrated",
+            manufacturer: { name: "Unknown", url: "" },
+            stats: [
+              { label: "Total Memory", value: "95 GB" },
+              { label: "Bandwidth", value: "2.76 TB/s" },
+            ],
+          },
+          nvlink: {
+            title: "Inter-Core Interconnect (ICI)",
+            desc: "Google's custom 3D torus network interconnect.",
+            cost: "Included",
+            manufacturer: { name: "Google", url: "https://cloud.google.com/tpu" },
+            stats: [
+              { label: "Bandwidth", value: "4,800 Gbps" },
+              { label: "Topology", value: "3D Torus" },
+            ],
+          },
+        }
+      }
+    }
   }
 };

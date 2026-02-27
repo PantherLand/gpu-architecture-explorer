@@ -1,3 +1,7 @@
+export type Vendor = "NVIDIA" | "AMD" | "Google";
+
+export type ComponentCategory = "cpu" | "gpu" | "baseboard" | "nic" | "switch" | "infrastructure" | "cable" | "memory";
+
 export type ComponentData = {
   title: string;
   desc: string;
@@ -7,6 +11,8 @@ export type ComponentData = {
     url: string;
   };
   stats: { label: string; value: string }[];
+  category?: ComponentCategory;
+  quantity?: number;
 };
 
 export type GPULayout = "single" | "dual" | "chiplet";
@@ -21,10 +27,20 @@ export type GPUConfig = {
   components: Record<string, ComponentData>;
 };
 
-export type Vendor = "NVIDIA" | "AMD";
-
 export type VendorConfig = {
   name: Vendor;
   color: string;
   gpus: Record<string, GPUConfig>;
+};
+
+export type ClusterConfig = {
+  id: string;
+  name: string;
+  vendor: Vendor;
+  clusterType: "ai" | "hpc";
+  totalGpus: string;
+  computePower: string;
+  interconnect: string;
+  description: string;
+  components: Record<string, ComponentData>;
 };
