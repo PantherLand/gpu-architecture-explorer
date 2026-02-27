@@ -1,6 +1,6 @@
 export type Vendor = "NVIDIA" | "AMD" | "Google";
 
-export type ComponentCategory = "cpu" | "gpu" | "baseboard" | "nic" | "switch" | "infrastructure" | "cable" | "memory";
+export type ComponentCategory = "cpu" | "gpu" | "baseboard" | "nic" | "switch" | "infrastructure" | "cable" | "memory" | "optic" | "asic";
 
 export type ComponentData = {
   title: string;

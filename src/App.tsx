@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Cpu, Info, Network, Layers, ChevronRight, Server, Database, Activity, Cable, Zap, Box } from "lucide-react";
 import { vendorConfigs } from "./data/gpuData";
 import { clusterData } from "./data/clusterData";
+import { networkData } from "./data/networkData";
 import { Vendor, ComponentCategory } from "./types";
 
 const CategoryIcon = ({ category, size = 16 }: { category?: ComponentCategory; size?: number }) => {
@@ -14,19 +15,22 @@ const CategoryIcon = ({ category, size = 16 }: { category?: ComponentCategory; s
     case "cable": return <Cable size={size} />;
     case "infrastructure": return <Zap size={size} />;
     case "baseboard": return <Layers size={size} />;
+    case "optic": return <Zap size={size} />;
+    case "asic": return <Cpu size={size} />;
     default: return <Activity size={size} />;
   }
 };
 
 export default function App() {
-  const [viewMode, setViewMode] = useState<"gpu" | "cluster" | "hpc">("gpu");
+  const [viewMode, setViewMode] = useState<"gpu" | "cluster" | "hpc" | "network">("gpu");
   const [activeVendor, setActiveVendor] = useState<Vendor>("NVIDIA");
   const [activeGpu, setActiveGpu] = useState<string>("B100");
   const [activeCluster, setActiveCluster] = useState<string>("nvl72");
+  const [activeNetwork, setActiveNetwork] = useState<string>("nv_infiniband");
   const [activeComponent, setActiveComponent] = useState<string>("package");
 
   // Cluster Data
-  const availableClusters = viewMode === "gpu" 
+  const availableClusters = viewMode === "gpu" || viewMode === "network"
     ? [] 
     : clusterData.filter(c => 
         (viewMode === "cluster" ? c.clusterType === "ai" : c.clusterType === "hpc") && 
@@ -40,13 +44,21 @@ export default function App() {
   // GPU Data
   const gpuConfig = vendor.gpus[activeGpu] || Object.values(vendor.gpus)[0];
   
+  // Network Data
+  const availableNetworks = viewMode === "network" ? networkData.filter(n => n.vendor === activeVendor) : [];
+  const networkConfig = availableNetworks.find(n => n.id === activeNetwork) || availableNetworks[0];
+
   const activeData = viewMode === "gpu" 
     ? (gpuConfig?.components[activeComponent] || gpuConfig?.components["package"])
+    : viewMode === "network"
+    ? (networkConfig ? (networkConfig.components[activeComponent] || Object.values(networkConfig.components)[0]) : null)
     : (clusterConfig ? (clusterConfig.components[activeComponent] || Object.values(clusterConfig.components)[0]) : null);
 
   const availableVendors = (["NVIDIA", "AMD", "Google"] as Vendor[]).filter(v => {
     if (viewMode === "gpu") {
       return Object.keys(vendorConfigs[v].gpus).length > 0;
+    } else if (viewMode === "network") {
+      return networkData.some(n => n.vendor === v);
     } else {
       const type = viewMode === "cluster" ? "ai" : "hpc";
       return clusterData.some(c => c.clusterType === type && c.vendor === v);
@@ -60,6 +72,12 @@ export default function App() {
       if (firstGpuId) {
         setActiveGpu(firstGpuId);
         setActiveComponent("package");
+      }
+    } else if (viewMode === "network") {
+      const firstNetwork = networkData.find(n => n.vendor === v);
+      if (firstNetwork) {
+        setActiveNetwork(firstNetwork.id);
+        setActiveComponent(Object.keys(firstNetwork.components)[0]);
       }
     } else {
       const type = viewMode === "cluster" ? "ai" : "hpc";
@@ -84,13 +102,33 @@ export default function App() {
     }
   };
 
-  const handleViewModeChange = (mode: "gpu" | "cluster" | "hpc") => {
+  const handleNetworkChange = (networkId: string) => {
+    setActiveNetwork(networkId);
+    const network = networkData.find(n => n.id === networkId);
+    if (network) {
+      setActiveComponent(Object.keys(network.components)[0]);
+    }
+  };
+
+  const handleViewModeChange = (mode: "gpu" | "cluster" | "hpc" | "network") => {
     setViewMode(mode);
     if (mode === "gpu") {
       const firstGpuId = Object.keys(vendorConfigs[activeVendor].gpus)[0];
       if (firstGpuId) {
         setActiveGpu(firstGpuId);
         setActiveComponent("package");
+      }
+    } else if (mode === "network") {
+      let firstNetwork = networkData.find(n => n.vendor === activeVendor);
+      if (!firstNetwork) {
+        firstNetwork = networkData.find(n => true);
+        if (firstNetwork) {
+          setActiveVendor(firstNetwork.vendor);
+        }
+      }
+      if (firstNetwork) {
+        setActiveNetwork(firstNetwork.id);
+        setActiveComponent(Object.keys(firstNetwork.components)[0]);
       }
     } else {
       const type = mode === "cluster" ? "ai" : "hpc";
@@ -139,15 +177,23 @@ export default function App() {
               >
                 <Database size={14} /> HPC CLUSTERS
               </button>
+              <button
+                onClick={() => handleViewModeChange("network")}
+                className={`px-4 py-1.5 rounded-md text-[10px] font-bold transition-all flex items-center gap-2 ${
+                  viewMode === "network" ? "bg-[#333] text-white" : "text-gray-500 hover:text-gray-300"
+                }`}
+              >
+                <Network size={14} /> NETWORK ARCH
+              </button>
             </div>
           </div>
           <div>
             <h1 className="text-4xl md:text-5xl font-bold tracking-tighter text-white mb-2">
-              {viewMode === "gpu" ? "CHIP" : viewMode === "hpc" ? "HPC CLUSTER" : "AI CLUSTER"}{" "}
+              {viewMode === "gpu" ? "CHIP" : viewMode === "hpc" ? "HPC CLUSTER" : viewMode === "network" ? "NETWORK" : "AI CLUSTER"}{" "}
               <span style={{ color: vendor.color }}>ARCHITECTURE</span> EXPLORER
             </h1>
             <p className="text-gray-500 font-mono text-sm tracking-widest uppercase">
-              Interactive Comparison // {activeVendor} {viewMode === "gpu" ? gpuConfig.generation : clusterConfig?.name}
+              Interactive Comparison // {activeVendor} {viewMode === "gpu" ? gpuConfig.generation : viewMode === "network" ? networkConfig?.name : clusterConfig?.name}
             </p>
           </div>
 
@@ -190,6 +236,25 @@ export default function App() {
                 }}
               >
                 {gpuId}
+              </button>
+            ))
+          ) : viewMode === "network" ? (
+            availableNetworks.map((network) => (
+              <button
+                key={network.id}
+                onClick={() => handleNetworkChange(network.id)}
+                className={`px-4 py-2 text-xs font-mono rounded border transition-all ${
+                  activeNetwork === network.id
+                    ? `text-white bg-opacity-20 shadow-[0_0_15px_rgba(255,255,255,0.1)]`
+                    : "border-[#2a2a2a] text-gray-500 hover:border-gray-400"
+                }`}
+                style={{
+                  borderColor: activeNetwork === network.id ? vendor.color : "#2a2a2a",
+                  backgroundColor: activeNetwork === network.id ? `${vendor.color}22` : "transparent",
+                  color: activeNetwork === network.id ? vendor.color : undefined,
+                }}
+              >
+                {network.name}
               </button>
             ))
           ) : (
@@ -502,6 +567,94 @@ export default function App() {
                 </div>
               </div>
             </>
+          ) : viewMode === "network" ? (
+            /* Network Architecture View */
+            <div className="w-full h-full flex flex-col items-center justify-center relative">
+              <div className="relative w-full max-w-4xl flex flex-col items-center justify-center gap-8 mt-8">
+                <div className="text-xs font-mono text-gray-500 mb-2 uppercase tracking-widest">Network Topology & Components</div>
+                
+                <div className="w-full max-w-2xl flex flex-col gap-6 relative">
+                  {/* Spine/Leaf Switch Layer */}
+                  {networkConfig?.components.switch && (
+                    <div 
+                      onMouseEnter={() => setActiveComponent("switch")}
+                      className={`w-full p-6 rounded-xl border-2 flex flex-col items-center justify-center transition-all cursor-pointer relative z-10 ${
+                        activeComponent === "switch" ? "bg-white/5 shadow-[0_0_20px_rgba(255,255,255,0.05)]" : "bg-[#111]"
+                      }`}
+                      style={{ borderColor: activeComponent === "switch" ? vendor.color : "#2a2a2a" }}
+                    >
+                      <div className="flex items-center gap-3 mb-2">
+                        <CategoryIcon category="switch" size={24} />
+                        <span className="text-lg font-bold text-white">{networkConfig.components.switch.title}</span>
+                      </div>
+                      
+                      {/* Switch ASIC inside Switch */}
+                      {networkConfig.components.asic && (
+                        <div 
+                          onMouseEnter={(e) => { e.stopPropagation(); setActiveComponent("asic"); }}
+                          className={`mt-4 p-3 rounded-lg border flex items-center justify-center transition-all cursor-pointer w-1/2 ${
+                            activeComponent === "asic" ? "bg-white/10" : "bg-[#1a1a1a]"
+                          }`}
+                          style={{ borderColor: activeComponent === "asic" ? vendor.color : "#333" }}
+                        >
+                          <CategoryIcon category="asic" size={16} />
+                          <span className="text-xs font-mono text-gray-400 ml-2">{networkConfig.components.asic.title}</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Optical Links Layer */}
+                  {networkConfig?.components.optic && (
+                    <div className="flex justify-center w-full relative z-0 -my-4">
+                      <div 
+                        onMouseEnter={() => setActiveComponent("optic")}
+                        className={`h-16 w-3/4 border-x-2 border-b-2 border-dashed rounded-b-2xl flex items-center justify-center transition-all cursor-pointer ${
+                          activeComponent === "optic" ? "bg-white/5" : "bg-transparent"
+                        }`}
+                        style={{ borderColor: activeComponent === "optic" ? vendor.color : "#2a2a2a" }}
+                      >
+                        <div className="bg-[#0a0a0a] px-3 py-1 rounded-full text-xs font-mono text-gray-400 flex items-center gap-2 border border-[#2a2a2a]">
+                          <CategoryIcon category="optic" size={14} /> {networkConfig.components.optic.title}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Compute Node / NIC Layer */}
+                  <div className="w-full border-2 border-[#2a2a2a] rounded-xl p-6 flex flex-col items-center gap-4 relative mt-2 z-10 bg-[#0a0a0a]">
+                    <div className="absolute -top-3 left-6 bg-[#0a0a0a] px-2 text-xs font-mono text-gray-500 uppercase">
+                      Compute Node
+                    </div>
+
+                    {networkConfig?.components.nic && (
+                      <div 
+                        onMouseEnter={() => setActiveComponent("nic")}
+                        className={`w-3/4 p-4 rounded-lg border-2 flex flex-col items-center justify-center transition-all cursor-pointer ${
+                          activeComponent === "nic" ? "bg-white/5 shadow-[0_0_15px_rgba(255,255,255,0.05)]" : "bg-[#1a1a1a]"
+                        }`}
+                        style={{ borderColor: activeComponent === "nic" ? vendor.color : "#333" }}
+                      >
+                        <div className="flex items-center gap-2 mb-1">
+                          <CategoryIcon category="nic" size={20} />
+                          <span className="text-sm font-bold text-white">{networkConfig.components.nic.title}</span>
+                        </div>
+                        <div className="text-[10px] font-mono text-gray-500 uppercase mt-2">
+                          {networkConfig.components.nic.stats[0]?.value} | {networkConfig.components.nic.stats[1]?.value}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Dummy GPU to show connection */}
+                    <div className="w-1/2 p-2 rounded border border-[#333] bg-[#111] flex items-center justify-center opacity-50 mt-2">
+                      <CategoryIcon category="gpu" size={14} />
+                      <span className="text-[10px] font-mono text-gray-500 ml-2">AI Accelerator (GPU/TPU)</span>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
           ) : !clusterConfig ? (
             /* Empty State for Cluster/HPC */
             <div className="w-full h-full flex flex-col items-center justify-center text-gray-500">
@@ -699,7 +852,7 @@ export default function App() {
           ) : (
             <AnimatePresence mode="wait">
               <motion.div
-                key={`${activeVendor}-${viewMode === "gpu" ? activeGpu : activeCluster}-${activeComponent}`}
+                key={`${activeVendor}-${viewMode === "gpu" ? activeGpu : viewMode === "network" ? activeNetwork : activeCluster}-${activeComponent}`}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
@@ -712,7 +865,7 @@ export default function App() {
                   </h3>
                   <div className="px-2 py-0.5 bg-[#1a1a1a] border border-[#2a2a2a] rounded text-[10px] font-mono text-gray-500 flex items-center gap-1">
                     {activeData.quantity && <span className="text-white font-bold">x{activeData.quantity}</span>}
-                    {viewMode === "gpu" ? activeGpu : activeCluster}
+                    {viewMode === "gpu" ? activeGpu : viewMode === "network" ? activeNetwork : activeCluster}
                   </div>
                 </div>
                 <p className="text-gray-400 text-sm leading-relaxed mb-6">{activeData.desc}</p>
