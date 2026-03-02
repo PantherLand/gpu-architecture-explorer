@@ -224,7 +224,6 @@ export function buildExplorerPath(state: ExplorerRouteState) {
       VIEW_BASE_PATH.gpu,
       slugifyPathSegment(normalized.vendor),
       slugifyPathSegment(normalized.gpuId),
-      slugifyPathSegment(normalized.componentId),
     ].join("/");
   }
 
@@ -274,7 +273,8 @@ export function parseExplorerPath(pathname: string) {
     const resolvedVendor = pickVendorForGpu(vendor);
     const gpuId = pickBySlug(getGpuIds(resolvedVendor), segments[3]);
     const resolvedGpuId = gpuId ?? getGpuIds(resolvedVendor)[0];
-    const componentId = pickBySlug(getComponentIdsForGpu(resolvedVendor, resolvedGpuId), segments[4]);
+    const componentId =
+      pickBySlug(getComponentIdsForGpu(resolvedVendor, resolvedGpuId), segments[4]) ?? "package";
 
     return normalizeExplorerRouteState({
       viewMode: "gpu",

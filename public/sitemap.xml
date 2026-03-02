@@ -139,439 +139,91 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://aiarchitecture.space/explorer/chip/amd/mi250x/die0</loc>
+    <loc>https://aiarchitecture.space/explorer/chip/amd/mi250x</loc>
     <lastmod>2026-03-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://aiarchitecture.space/explorer/chip/amd/mi250x/die1</loc>
+    <loc>https://aiarchitecture.space/explorer/chip/amd/mi300x</loc>
     <lastmod>2026-03-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://aiarchitecture.space/explorer/chip/amd/mi250x/hbi</loc>
+    <loc>https://aiarchitecture.space/explorer/chip/amd/mi325x</loc>
     <lastmod>2026-03-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://aiarchitecture.space/explorer/chip/amd/mi250x/hbm</loc>
+    <loc>https://aiarchitecture.space/explorer/chip/apple/m1</loc>
     <lastmod>2026-03-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://aiarchitecture.space/explorer/chip/amd/mi250x/nvlink</loc>
+    <loc>https://aiarchitecture.space/explorer/chip/apple/m2</loc>
     <lastmod>2026-03-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://aiarchitecture.space/explorer/chip/amd/mi250x/package</loc>
+    <loc>https://aiarchitecture.space/explorer/chip/apple/m2-ultra</loc>
     <lastmod>2026-03-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://aiarchitecture.space/explorer/chip/amd/mi300x/die</loc>
+    <loc>https://aiarchitecture.space/explorer/chip/apple/m4</loc>
     <lastmod>2026-03-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://aiarchitecture.space/explorer/chip/amd/mi300x/hbm</loc>
+    <loc>https://aiarchitecture.space/explorer/chip/apple/m4-max</loc>
     <lastmod>2026-03-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://aiarchitecture.space/explorer/chip/amd/mi300x/nvlink</loc>
+    <loc>https://aiarchitecture.space/explorer/chip/google/tpu-v5p</loc>
     <lastmod>2026-03-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://aiarchitecture.space/explorer/chip/amd/mi300x/package</loc>
+    <loc>https://aiarchitecture.space/explorer/chip/nvidia/a100</loc>
     <lastmod>2026-03-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://aiarchitecture.space/explorer/chip/amd/mi325x/die</loc>
+    <loc>https://aiarchitecture.space/explorer/chip/nvidia/b100</loc>
     <lastmod>2026-03-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://aiarchitecture.space/explorer/chip/amd/mi325x/hbm</loc>
+    <loc>https://aiarchitecture.space/explorer/chip/nvidia/b200</loc>
     <lastmod>2026-03-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://aiarchitecture.space/explorer/chip/amd/mi325x/nvlink</loc>
+    <loc>https://aiarchitecture.space/explorer/chip/nvidia/b300</loc>
     <lastmod>2026-03-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://aiarchitecture.space/explorer/chip/amd/mi325x/package</loc>
+    <loc>https://aiarchitecture.space/explorer/chip/nvidia/h100</loc>
     <lastmod>2026-03-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://aiarchitecture.space/explorer/chip/apple/m1/die</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/apple/m1/hbm</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/apple/m1/nvlink</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/apple/m1/package</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/apple/m1/pcie</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/apple/m2-ultra/die</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/apple/m2-ultra/hbm</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/apple/m2-ultra/nvlink</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/apple/m2-ultra/package</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/apple/m2-ultra/pcie</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/apple/m2/die</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/apple/m2/hbm</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/apple/m2/nvlink</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/apple/m2/package</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/apple/m2/pcie</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/apple/m4-max/die</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/apple/m4-max/hbm</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/apple/m4-max/nvlink</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/apple/m4-max/package</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/apple/m4-max/pcie</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/apple/m4/die</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/apple/m4/hbm</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/apple/m4/nvlink</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/apple/m4/package</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/apple/m4/pcie</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/google/tpu-v5p/die</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/google/tpu-v5p/hbm</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/google/tpu-v5p/nvlink</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/google/tpu-v5p/package</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/nvidia/a100/die</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/nvidia/a100/hbm</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/nvidia/a100/nvlink</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/nvidia/a100/package</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/nvidia/b100/die0</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/nvidia/b100/die1</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/nvidia/b100/hbi</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/nvidia/b100/hbm</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/nvidia/b100/nvlink</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/nvidia/b100/package</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/nvidia/b200/die0</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/nvidia/b200/die1</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/nvidia/b200/hbi</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/nvidia/b200/hbm</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/nvidia/b200/nvlink</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/nvidia/b200/package</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/nvidia/b300/die0</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/nvidia/b300/die1</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/nvidia/b300/hbi</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/nvidia/b300/hbm</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/nvidia/b300/nvlink</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/nvidia/b300/package</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/nvidia/h100/die</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/nvidia/h100/hbm</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/nvidia/h100/nvlink</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/nvidia/h100/package</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/nvidia/h200/die</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/nvidia/h200/hbm</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/nvidia/h200/nvlink</loc>
-    <lastmod>2026-03-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://aiarchitecture.space/explorer/chip/nvidia/h200/package</loc>
+    <loc>https://aiarchitecture.space/explorer/chip/nvidia/h200</loc>
     <lastmod>2026-03-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
