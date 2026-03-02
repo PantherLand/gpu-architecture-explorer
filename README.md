@@ -1,20 +1,62 @@
 <div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+
+# GPU Architecture Explorer
+
+**Interactive comparison of GPU architectures from NVIDIA, AMD, Google, and Apple**
+
+[Live Demo](https://aiarchitecture.space/) · [Report Bug](https://github.com/PantherLand/gpu-architecture-explorer/issues)
+
 </div>
 
-# Run and deploy your AI Studio app
+## Screenshots
 
-This contains everything you need to run your app locally.
+### Chip Architecture
+Interactive GPU package diagrams — explore HBM stacks, compute dies, NVLink interconnects, and PCIe interfaces.
 
-View your app in AI Studio: https://ai.studio/apps/3342b613-acb9-4f02-9c16-f2953b35e69e
+![Chip Architecture](public/screenshot.png)
 
-## Run Locally
+### AI Cluster Architecture
+Visualize large-scale AI training clusters like Meta's H100 SuperPOD (24,576 GPUs) and NVIDIA GB200 NVL72 racks.
 
-**Prerequisites:**  Node.js
+![AI Clusters](public/screenshot-clusters.png)
 
+### Network Architecture
+Understand network topologies — InfiniBand fat-tree, RoCEv2 Ethernet, and Optical Circuit Switches.
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+![Network Architecture](public/screenshot-network.png)
+
+## Features
+
+- **Multi-vendor comparison** — NVIDIA (A100 → H100 → H200 → B100 → B200 → B300), AMD (MI250X, MI300X, MI325X), Google TPU v5p, Apple M-series
+- **Chip Architecture view** — Interactive package layout with HBM stacks, compute dies, NV-HBI bridges, and interconnects
+- **AI / HPC Cluster view** — System-level BOM with CPUs, GPUs, NICs, switches, and cabling
+- **Network Architecture view** — Fat-tree topologies with switch ASICs, optical transceivers, and SmartNICs
+- **Component details panel** — Hover any component to see specs, estimated cost, and manufacturer info
+- **Dark mode UI** with vendor-specific color accents
+
+## Architectures Covered
+
+| Vendor | Models |
+|--------|--------|
+| NVIDIA | A100, H100, H200, B100, B200, B300 |
+| AMD | MI250X, MI300X, MI325X |
+| Google | TPU v5p |
+| Apple | M1, M2, M2 Ultra, M4, M4 Max |
+
+## Tech Stack
+
+- React 19 + TypeScript
+- Tailwind CSS 4
+- Framer Motion
+- Vite
+
+## Getting Started
+
+```bash
+npm install
+npm run dev
+```
+
+## License
+
+MIT
