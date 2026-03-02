@@ -10,12 +10,14 @@ import {
   ArrowRight,
   Github,
 } from "lucide-react";
+import { buildExplorerPath, getDefaultExplorerRouteState, type ViewMode } from "./routes";
+import { type Vendor } from "./types";
 
 const VENDORS = [
-  { name: "NVIDIA", color: "#76b900", models: ["A100", "H100", "H200", "B100", "B200", "B300"] },
-  { name: "AMD", color: "#ed1c24", models: ["MI250X", "MI300X", "MI325X"] },
-  { name: "Google", color: "#4285f4", models: ["TPU v5p"] },
-  { name: "Apple", color: "#a2aaad", models: ["M1", "M2", "M2 Ultra", "M4", "M4 Max"] },
+  { name: "NVIDIA" as Vendor, color: "#76b900", models: ["A100", "H100", "H200", "B100", "B200", "B300"] },
+  { name: "AMD" as Vendor, color: "#ed1c24", models: ["MI250X", "MI300X", "MI325X"] },
+  { name: "Google" as Vendor, color: "#4285f4", models: ["TPU v5p"] },
+  { name: "Apple" as Vendor, color: "#a2aaad", models: ["M1", "M2", "M2 Ultra", "M4", "M4 Max"] },
 ];
 
 const FEATURES = [
@@ -24,24 +26,28 @@ const FEATURES = [
     title: "Chip Architecture",
     desc: "Interactive GPU package diagrams — HBM stacks, compute dies, NVLink interconnects, and PCIe interfaces.",
     tag: "CHIP ARCH",
+    viewMode: "gpu" as ViewMode,
   },
   {
     icon: Server,
     title: "AI Clusters",
     desc: "Visualize large-scale AI training clusters like Meta's H100 SuperPOD with 24,576 GPUs.",
     tag: "AI CLUSTERS",
+    viewMode: "cluster" as ViewMode,
   },
   {
     icon: Layers,
     title: "HPC Clusters",
     desc: "Explore high-performance computing systems like the Frontier supercomputer.",
     tag: "HPC CLUSTERS",
+    viewMode: "hpc" as ViewMode,
   },
   {
     icon: Network,
     title: "Network Architecture",
     desc: "Understand InfiniBand fat-tree, RoCEv2 Ethernet, and Optical Circuit Switch topologies.",
     tag: "NETWORK ARCH",
+    viewMode: "network" as ViewMode,
   },
 ];
 
@@ -64,7 +70,22 @@ const itemVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
 };
 
-export default function LandingPage({ onEnter }: { onEnter: () => void }) {
+export default function LandingPage({
+  onNavigate,
+}: {
+  onNavigate?: (path: string) => void;
+}) {
+  const defaultExplorerPath = buildExplorerPath(getDefaultExplorerRouteState("gpu"));
+
+  const navigateTo = (path: string) => {
+    if (onNavigate) {
+      onNavigate(path);
+      return;
+    }
+
+    window.location.href = path;
+  };
+
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-[#e5e5e5] overflow-x-hidden">
       {/* ── Nav ── */}
@@ -88,7 +109,7 @@ export default function LandingPage({ onEnter }: { onEnter: () => void }) {
               <Github size={20} />
             </a>
             <button
-              onClick={onEnter}
+              onClick={() => navigateTo(defaultExplorerPath)}
               className="px-4 py-2 rounded-lg text-sm font-medium bg-[#76b900] text-black hover:bg-[#8ad400] transition-colors cursor-pointer"
             >
               Launch Explorer
@@ -139,7 +160,7 @@ export default function LandingPage({ onEnter }: { onEnter: () => void }) {
 
           <motion.div variants={itemVariants} className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
-              onClick={onEnter}
+              onClick={() => navigateTo(defaultExplorerPath)}
               className="group flex items-center gap-2 px-8 py-4 rounded-xl text-base font-semibold bg-[#76b900] text-black hover:bg-[#8ad400] transition-all cursor-pointer"
             >
               Start Exploring
@@ -159,13 +180,21 @@ export default function LandingPage({ onEnter }: { onEnter: () => void }) {
           {/* Vendor pills */}
           <motion.div variants={itemVariants} className="mt-16 flex flex-wrap items-center justify-center gap-3">
             {VENDORS.map((v) => (
-              <span
+              <button
                 key={v.name}
+                onClick={() =>
+                  navigateTo(
+                    buildExplorerPath({
+                      ...getDefaultExplorerRouteState("gpu"),
+                      vendor: v.name,
+                    })
+                  )
+                }
                 className="px-4 py-2 rounded-lg border border-[#2a2a2a] bg-[#111] text-sm font-mono"
                 style={{ color: v.color }}
               >
                 {v.name}
-              </span>
+              </button>
             ))}
           </motion.div>
         </motion.div>
@@ -219,7 +248,7 @@ export default function LandingPage({ onEnter }: { onEnter: () => void }) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1, duration: 0.45 }}
-                onClick={onEnter}
+                onClick={() => navigateTo(buildExplorerPath(getDefaultExplorerRouteState(f.viewMode)))}
                 className="group relative p-8 rounded-2xl border border-[#1a1a1a] bg-[#0d0d0d] hover:border-[#76b900]/30 transition-all cursor-pointer"
               >
                 <div className="absolute top-6 right-6">
@@ -315,7 +344,7 @@ export default function LandingPage({ onEnter }: { onEnter: () => void }) {
                 datacenter-scale clusters.
               </p>
               <button
-                onClick={onEnter}
+                onClick={() => navigateTo(defaultExplorerPath)}
                 className="group inline-flex items-center gap-2 px-8 py-4 rounded-xl text-base font-semibold bg-[#76b900] text-black hover:bg-[#8ad400] transition-all cursor-pointer"
               >
                 Launch Explorer

@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Cpu, Info, Network, Layers, ChevronRight, ChevronLeft, Server, Database, Activity, Cable, Zap, Box } from "lucide-react";
 import { vendorConfigs } from "./data/gpuData";
 import { clusterData } from "./data/clusterData";
 import { networkData } from "./data/networkData";
-import { Vendor, ComponentCategory } from "./types";
+import { type ComponentCategory, type Vendor } from "./types";
+import { type ExplorerRouteState, type ViewMode } from "./routes";
 
 const CategoryIcon = ({ category, size = 16 }: { category?: ComponentCategory; size?: number }) => {
   switch (category) {
@@ -21,13 +22,21 @@ const CategoryIcon = ({ category, size = 16 }: { category?: ComponentCategory; s
   }
 };
 
-export default function App({ onBack }: { onBack?: () => void }) {
-  const [viewMode, setViewMode] = useState<"gpu" | "cluster" | "hpc" | "network">("gpu");
-  const [activeVendor, setActiveVendor] = useState<Vendor>("NVIDIA");
-  const [activeGpu, setActiveGpu] = useState<string>("B100");
-  const [activeCluster, setActiveCluster] = useState<string>("nvl72");
-  const [activeNetwork, setActiveNetwork] = useState<string>("nv_infiniband");
-  const [activeComponent, setActiveComponent] = useState<string>("package");
+export default function App({
+  onBack,
+  routeState,
+  onRouteStateChange,
+}: {
+  onBack?: () => void;
+  routeState?: ExplorerRouteState;
+  onRouteStateChange?: (state: ExplorerRouteState) => void;
+}) {
+  const [viewMode, setViewMode] = useState<ViewMode>(routeState?.viewMode ?? "gpu");
+  const [activeVendor, setActiveVendor] = useState<Vendor>(routeState?.vendor ?? "NVIDIA");
+  const [activeGpu, setActiveGpu] = useState<string>(routeState?.gpuId ?? "B100");
+  const [activeCluster, setActiveCluster] = useState<string>(routeState?.clusterId ?? "nvl72");
+  const [activeNetwork, setActiveNetwork] = useState<string>(routeState?.networkId ?? "nv_infiniband");
+  const [activeComponent, setActiveComponent] = useState<string>(routeState?.componentId ?? "package");
 
   // Cluster Data
   const availableClusters = viewMode === "gpu" || viewMode === "network"
@@ -110,7 +119,7 @@ export default function App({ onBack }: { onBack?: () => void }) {
     }
   };
 
-  const handleViewModeChange = (mode: "gpu" | "cluster" | "hpc" | "network") => {
+  const applyViewMode = (mode: ViewMode) => {
     setViewMode(mode);
     if (mode === "gpu") {
       const firstGpuId = Object.keys(vendorConfigs[activeVendor].gpus)[0];
@@ -144,6 +153,62 @@ export default function App({ onBack }: { onBack?: () => void }) {
         setActiveComponent(Object.keys(firstCluster.components)[0]);
       }
     }
+  };
+
+  useEffect(() => {
+    if (!routeState) {
+      return;
+    }
+
+    if (routeState.viewMode !== viewMode) {
+      setViewMode(routeState.viewMode);
+    }
+
+    if (routeState.vendor !== activeVendor) {
+      setActiveVendor(routeState.vendor);
+    }
+
+    if (routeState.gpuId !== activeGpu) {
+      setActiveGpu(routeState.gpuId);
+    }
+
+    if (routeState.clusterId !== activeCluster) {
+      setActiveCluster(routeState.clusterId);
+    }
+
+    if (routeState.networkId !== activeNetwork) {
+      setActiveNetwork(routeState.networkId);
+    }
+
+    if (routeState.componentId !== activeComponent) {
+      setActiveComponent(routeState.componentId);
+    }
+  }, [
+    routeState?.viewMode,
+    routeState?.vendor,
+    routeState?.gpuId,
+    routeState?.clusterId,
+    routeState?.networkId,
+    routeState?.componentId,
+  ]);
+
+  useEffect(() => {
+    onRouteStateChange?.({
+      viewMode,
+      vendor: activeVendor,
+      gpuId: activeGpu,
+      clusterId: activeCluster,
+      networkId: activeNetwork,
+      componentId: activeComponent,
+    });
+  }, [viewMode, activeVendor, activeGpu, activeCluster, activeNetwork, activeComponent, onRouteStateChange]);
+
+  const handleViewModeChange = (mode: ViewMode) => {
+    if (mode === viewMode) {
+      return;
+    }
+
+    applyViewMode(mode);
   };
 
   return (
@@ -960,5 +1025,3 @@ export default function App({ onBack }: { onBack?: () => void }) {
     </div>
   );
 }
-
-
