@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Cpu, Info, Network, Layers, ChevronRight, Server, Database, Activity, Cable, Zap, Box } from "lucide-react";
+import { Cpu, Info, Network, Layers, ChevronRight, ChevronLeft, Server, Database, Activity, Cable, Zap, Box } from "lucide-react";
 import { vendorConfigs } from "./data/gpuData";
 import { clusterData } from "./data/clusterData";
 import { networkData } from "./data/networkData";
@@ -21,7 +21,7 @@ const CategoryIcon = ({ category, size = 16 }: { category?: ComponentCategory; s
   }
 };
 
-export default function App() {
+export default function App({ onBack }: { onBack?: () => void }) {
   const [viewMode, setViewMode] = useState<"gpu" | "cluster" | "hpc" | "network">("gpu");
   const [activeVendor, setActiveVendor] = useState<Vendor>("NVIDIA");
   const [activeGpu, setActiveGpu] = useState<string>("B100");
@@ -152,6 +152,15 @@ export default function App() {
       <header className="mb-8 border-b border-[#2a2a2a] pb-6 flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6">
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-4">
+            {onBack && (
+              <button
+                onClick={onBack}
+                className="p-2 rounded-lg border border-[#2a2a2a] bg-[#1a1a1a] text-gray-400 hover:text-white hover:border-[#3a3a3a] transition-all cursor-pointer"
+                title="Back to Home"
+              >
+                <ChevronLeft size={16} />
+              </button>
+            )}
             <div className="flex gap-1 p-1 bg-[#1a1a1a] rounded-lg border border-[#2a2a2a]">
               <button
                 onClick={() => handleViewModeChange("gpu")}

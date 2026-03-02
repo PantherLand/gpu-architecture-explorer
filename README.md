@@ -10,6 +10,10 @@
 
 ## Screenshots
 
+### Landing Page
+
+![Landing Page](public/screenshot-landing.png)
+
 ### Chip Architecture
 Interactive GPU package diagrams — explore HBM stacks, compute dies, NVLink interconnects, and PCIe interfaces.
 
