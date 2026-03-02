@@ -641,5 +641,330 @@ export const vendorConfigs: Record<string, VendorConfig> = {
         }
       }
     }
+  },
+  Apple: {
+    name: "Apple",
+    color: "#A2AAAD",
+    gpus: {
+      "M1": {
+        id: "M1",
+        name: "M1",
+        generation: "M1",
+        process: "TSMC 5nm",
+        layout: "single",
+        hbmStacks: 2,
+        components: {
+          package: {
+            title: "M1 SoC",
+            desc: "Apple's first custom silicon for Mac, revolutionizing performance per watt.",
+            cost: "Est. $999 (MacBook Air)",
+            manufacturer: { name: "TSMC / Apple", url: "https://www.apple.com" },
+            stats: [
+              { label: "Transistors", value: "16 Billion" },
+              { label: "Process Node", value: "TSMC 5nm" },
+              { label: "TDP", value: "~15W" },
+            ],
+          },
+          die: {
+            title: "M1 Silicon Die",
+            desc: "Monolithic die containing 8 CPU cores, up to 8 GPU cores, and a 16-core Neural Engine.",
+            cost: "Integrated",
+            manufacturer: { name: "TSMC", url: "https://www.tsmc.com" },
+            stats: [
+              { label: "CPU Cores", value: "4P + 4E" },
+              { label: "GPU Cores", value: "8" },
+              { label: "NPU", value: "11 TOPS" },
+              { label: "Die Size", value: "~119 mm²" },
+            ],
+          },
+          hbm: {
+            title: "Unified Memory (LPDDR4X)",
+            desc: "High-bandwidth unified memory accessible by CPU, GPU, and NPU.",
+            cost: "Integrated",
+            manufacturer: { name: "Samsung / SK Hynix", url: "https://www.apple.com" },
+            stats: [
+              { label: "Capacity", value: "Up to 16GB" },
+              { label: "Bandwidth", value: "68.25 GB/s" },
+              { label: "Type", value: "LPDDR4X-4266" },
+            ],
+          },
+          nvlink: {
+            title: "Apple Fabric",
+            desc: "High bandwidth internal fabric connecting the CPU, GPU, NPU, and memory controllers.",
+            cost: "Included",
+            manufacturer: { name: "Apple", url: "https://www.apple.com" },
+            stats: [
+              { label: "Architecture", value: "Unified Fabric" },
+              { label: "Latency", value: "Ultra-low" },
+            ],
+          },
+          pcie: {
+            title: "Media Engine & I/O",
+            desc: "Dedicated hardware for video acceleration and Thunderbolt / USB 4 I/O.",
+            cost: "Included",
+            manufacturer: { name: "Apple", url: "https://www.apple.com" },
+            stats: [
+              { label: "Video", value: "H.264/HEVC Encode/Decode" },
+              { label: "I/O", value: "Thunderbolt / USB 4" },
+            ],
+          },
+        },
+      },
+      "M2": {
+        id: "M2",
+        name: "M2",
+        generation: "M2",
+        process: "TSMC 5nm (N5P)",
+        layout: "single",
+        hbmStacks: 2,
+        components: {
+          package: {
+            title: "M2 SoC",
+            desc: "Second generation Apple Silicon with enhanced performance and memory bandwidth.",
+            cost: "Est. $1199 (MacBook Air)",
+            manufacturer: { name: "TSMC / Apple", url: "https://www.apple.com" },
+            stats: [
+              { label: "Transistors", value: "20 Billion" },
+              { label: "Process Node", value: "TSMC 5nm (N5P)" },
+              { label: "TDP", value: "~20W" },
+            ],
+          },
+          die: {
+            title: "M2 Silicon Die",
+            desc: "Monolithic die containing 8 CPU cores, up to 10 GPU cores, and a 16-core Neural Engine.",
+            cost: "Integrated",
+            manufacturer: { name: "TSMC", url: "https://www.tsmc.com" },
+            stats: [
+              { label: "CPU Cores", value: "4P + 4E" },
+              { label: "GPU Cores", value: "10" },
+              { label: "NPU", value: "15.8 TOPS" },
+              { label: "Die Size", value: "~155 mm²" },
+            ],
+          },
+          hbm: {
+            title: "Unified Memory (LPDDR5)",
+            desc: "High-bandwidth unified memory accessible by CPU, GPU, and NPU.",
+            cost: "Integrated",
+            manufacturer: { name: "Samsung / SK Hynix", url: "https://www.apple.com" },
+            stats: [
+              { label: "Capacity", value: "Up to 24GB" },
+              { label: "Bandwidth", value: "100 GB/s" },
+              { label: "Type", value: "LPDDR5-6400" },
+            ],
+          },
+          nvlink: {
+            title: "Apple Fabric",
+            desc: "High bandwidth internal fabric connecting the CPU, GPU, NPU, and memory controllers.",
+            cost: "Included",
+            manufacturer: { name: "Apple", url: "https://www.apple.com" },
+            stats: [
+              { label: "Architecture", value: "Unified Fabric" },
+              { label: "Latency", value: "Ultra-low" },
+            ],
+          },
+          pcie: {
+            title: "Media Engine & I/O",
+            desc: "Dedicated hardware for ProRes/HEVC acceleration and Thunderbolt / USB 4 I/O.",
+            cost: "Included",
+            manufacturer: { name: "Apple", url: "https://www.apple.com" },
+            stats: [
+              { label: "Video", value: "ProRes/HEVC Encode/Decode" },
+              { label: "I/O", value: "Thunderbolt / USB 4" },
+            ],
+          },
+        },
+      },
+      "M4": {
+        id: "M4",
+        name: "M4",
+        generation: "M4",
+        process: "TSMC 3nm (N3E)",
+        layout: "single",
+        hbmStacks: 2,
+        components: {
+          package: {
+            title: "M4 SoC",
+            desc: "Fourth generation Apple Silicon featuring industry-leading single-core performance and advanced NPU.",
+            cost: "Est. $999 (iPad Pro) / $1599 (MacBook Pro)",
+            manufacturer: { name: "TSMC / Apple", url: "https://www.apple.com" },
+            stats: [
+              { label: "Transistors", value: "28 Billion" },
+              { label: "Process Node", value: "TSMC 3nm (N3E)" },
+              { label: "TDP", value: "~20W" },
+            ],
+          },
+          die: {
+            title: "M4 Silicon Die",
+            desc: "Monolithic die containing up to 10 CPU cores, 10 GPU cores, and a 16-core Neural Engine.",
+            cost: "Integrated",
+            manufacturer: { name: "TSMC", url: "https://www.tsmc.com" },
+            stats: [
+              { label: "CPU Cores", value: "4P + 6E" },
+              { label: "GPU Cores", value: "10" },
+              { label: "NPU", value: "38 TOPS" },
+              { label: "Die Size", value: "Unknown" },
+            ],
+          },
+          hbm: {
+            title: "Unified Memory (LPDDR5X)",
+            desc: "High-bandwidth unified memory accessible by CPU, GPU, and NPU.",
+            cost: "Integrated",
+            manufacturer: { name: "Samsung / SK Hynix", url: "https://www.apple.com" },
+            stats: [
+              { label: "Capacity", value: "Up to 32GB" },
+              { label: "Bandwidth", value: "120 GB/s" },
+              { label: "Type", value: "LPDDR5X-7500" },
+            ],
+          },
+          nvlink: {
+            title: "Apple Fabric",
+            desc: "High bandwidth internal fabric connecting the CPU, GPU, NPU, and memory controllers.",
+            cost: "Included",
+            manufacturer: { name: "Apple", url: "https://www.apple.com" },
+            stats: [
+              { label: "Architecture", value: "Unified Fabric" },
+              { label: "Latency", value: "Ultra-low" },
+            ],
+          },
+          pcie: {
+            title: "Media Engine & I/O",
+            desc: "Dedicated hardware for ProRes/HEVC acceleration and Thunderbolt 4 I/O.",
+            cost: "Included",
+            manufacturer: { name: "Apple", url: "https://www.apple.com" },
+            stats: [
+              { label: "Video", value: "ProRes/HEVC Encode/Decode" },
+              { label: "I/O", value: "Thunderbolt 4" },
+            ],
+          },
+        },
+      },
+      "M4 Max": {
+        id: "M4 Max",
+        name: "M4 Max",
+        generation: "M4",
+        process: "TSMC 3nm (N3E)",
+        layout: "single",
+        hbmStacks: 4,
+        components: {
+          package: {
+            title: "M4 Max SoC",
+            desc: "Apple's flagship system-on-chip featuring Unified Memory Architecture, integrating CPU, GPU, and Neural Engine.",
+            cost: "Est. $3,000 (MacBook Pro)",
+            manufacturer: { name: "TSMC / Apple", url: "https://www.apple.com" },
+            stats: [
+              { label: "Transistors", value: "92 Billion" },
+              { label: "Process Node", value: "TSMC 3nm" },
+              { label: "TDP", value: "~78W" },
+            ],
+          },
+          die: {
+            title: "M4 Max Silicon Die",
+            desc: "Monolithic die containing 16 CPU cores, 40 GPU cores, and a 16-core Neural Engine.",
+            cost: "Integrated",
+            manufacturer: { name: "TSMC", url: "https://www.tsmc.com" },
+            stats: [
+              { label: "CPU Cores", value: "12P + 4E" },
+              { label: "GPU Cores", value: "40" },
+              { label: "NPU", value: "38 TOPS" },
+              { label: "Die Size", value: "~400 mm²" },
+            ],
+          },
+          hbm: {
+            title: "Unified Memory (LPDDR5X)",
+            desc: "High-bandwidth unified memory accessible by CPU, GPU, and NPU simultaneously without copying.",
+            cost: "Integrated",
+            manufacturer: { name: "Samsung / SK Hynix", url: "https://www.apple.com" },
+            stats: [
+              { label: "Capacity", value: "Up to 128GB" },
+              { label: "Bandwidth", value: "546 GB/s" },
+              { label: "Type", value: "LPDDR5X-8533" },
+            ],
+          },
+          nvlink: {
+            title: "Apple Fabric",
+            desc: "Ultra-high bandwidth internal fabric connecting the CPU, GPU, NPU, and memory controllers.",
+            cost: "Included",
+            manufacturer: { name: "Apple", url: "https://www.apple.com" },
+            stats: [
+              { label: "Architecture", value: "Unified Fabric" },
+              { label: "Latency", value: "Ultra-low" },
+            ],
+          },
+          pcie: {
+            title: "Media Engine & I/O",
+            desc: "Dedicated hardware for ProRes/HEVC acceleration and Thunderbolt 4 / PCIe Gen4 I/O.",
+            cost: "Included",
+            manufacturer: { name: "Apple", url: "https://www.apple.com" },
+            stats: [
+              { label: "Video", value: "2x ProRes Encode/Decode" },
+              { label: "I/O", value: "Thunderbolt 4" },
+            ],
+          },
+        },
+      },
+      "M2 Ultra": {
+        id: "M2 Ultra",
+        name: "M2 Ultra",
+        generation: "M2",
+        process: "TSMC 5nm",
+        layout: "chiplet",
+        hbmStacks: 8,
+        components: {
+          package: {
+            title: "M2 Ultra SoC",
+            desc: "Two M2 Max dies connected via UltraFusion packaging architecture.",
+            cost: "Est. $4,000+ (Mac Studio)",
+            manufacturer: { name: "TSMC / Apple", url: "https://www.apple.com" },
+            stats: [
+              { label: "Transistors", value: "134 Billion" },
+              { label: "Process Node", value: "TSMC 5nm" },
+              { label: "TDP", value: "~150W" },
+            ],
+          },
+          die: {
+            title: "Dual M2 Max Dies",
+            desc: "Two identical M2 Max dies acting as a single unified chip to software.",
+            cost: "Integrated",
+            manufacturer: { name: "TSMC", url: "https://www.tsmc.com" },
+            stats: [
+              { label: "CPU Cores", value: "16P + 8E" },
+              { label: "GPU Cores", value: "76" },
+              { label: "NPU", value: "31.6 TOPS" },
+            ],
+          },
+          hbm: {
+            title: "Unified Memory (LPDDR5)",
+            desc: "Massive unified memory pool shared across all compute engines.",
+            cost: "Integrated",
+            manufacturer: { name: "Samsung / SK Hynix", url: "https://www.apple.com" },
+            stats: [
+              { label: "Capacity", value: "Up to 192GB" },
+              { label: "Bandwidth", value: "800 GB/s" },
+              { label: "Type", value: "LPDDR5-6400" },
+            ],
+          },
+          nvlink: {
+            title: "UltraFusion Interconnect",
+            desc: "Silicon interposer connecting the two M2 Max dies with massive bandwidth.",
+            cost: "Included",
+            manufacturer: { name: "TSMC", url: "https://www.tsmc.com" },
+            stats: [
+              { label: "Bandwidth", value: "2.5 TB/s" },
+              { label: "Latency", value: "Die-to-Die" },
+            ],
+          },
+          pcie: {
+            title: "Media Engine & I/O",
+            desc: "Doubled media engines for extreme video processing capabilities.",
+            cost: "Included",
+            manufacturer: { name: "Apple", url: "https://www.apple.com" },
+            stats: [
+              { label: "Video", value: "4x ProRes Encode/Decode" },
+              { label: "Displays", value: "Up to 8" },
+            ],
+          },
+        },
+      }
+    }
   }
 };

@@ -1,4 +1,4 @@
-export type Vendor = "NVIDIA" | "AMD" | "Google";
+export type Vendor = "NVIDIA" | "AMD" | "Google" | "Apple";
 
 export type ComponentCategory = "cpu" | "gpu" | "baseboard" | "nic" | "switch" | "infrastructure" | "cable" | "memory" | "optic" | "asic";
 

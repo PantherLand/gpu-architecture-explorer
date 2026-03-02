@@ -54,7 +54,7 @@ export default function App() {
     ? (networkConfig ? (networkConfig.components[activeComponent] || Object.values(networkConfig.components)[0]) : null)
     : (clusterConfig ? (clusterConfig.components[activeComponent] || Object.values(clusterConfig.components)[0]) : null);
 
-  const availableVendors = (["NVIDIA", "AMD", "Google"] as Vendor[]).filter(v => {
+  const availableVendors = (["NVIDIA", "AMD", "Google", "Apple"] as Vendor[]).filter(v => {
     if (viewMode === "gpu") {
       return Object.keys(vendorConfigs[v].gpus).length > 0;
     } else if (viewMode === "network") {
@@ -313,7 +313,49 @@ export default function App() {
                     backgroundColor: activeComponent === "nvlink" ? `${vendor.color}22` : "transparent",
                   }}
                 >
-                  {activeVendor === "NVIDIA" ? "NVLINK" : "INFINITY FABRIC"}
+                  {activeVendor === "NVIDIA" ? "NVLINK" : activeVendor === "AMD" ? "INFINITY FABRIC" : activeVendor === "Apple" ? "ULTRAFUSION" : "INTERCONNECT"}
+                </button>
+                <button
+                  onMouseEnter={() => setActiveComponent("hbm")}
+                  className={`px-3 py-1 text-[10px] font-mono rounded border transition-colors cursor-pointer ${
+                    activeComponent === "hbm"
+                      ? "text-white"
+                      : "border-[#2a2a2a] text-gray-500 hover:border-gray-500"
+                  }`}
+                  style={{
+                    borderColor: activeComponent === "hbm" ? vendor.color : "#2a2a2a",
+                    backgroundColor: activeComponent === "hbm" ? `${vendor.color}22` : "transparent",
+                  }}
+                >
+                  {activeVendor === "Apple" ? "UNIFIED MEMORY" : "HBM STACKS"}
+                </button>
+                <button
+                  onMouseEnter={() => setActiveComponent("die")}
+                  className={`px-3 py-1 text-[10px] font-mono rounded border transition-colors cursor-pointer ${
+                    activeComponent === "die" || activeComponent === "die0" || activeComponent === "die1"
+                      ? "text-white"
+                      : "border-[#2a2a2a] text-gray-500 hover:border-gray-500"
+                  }`}
+                  style={{
+                    borderColor: activeComponent === "die" || activeComponent === "die0" || activeComponent === "die1" ? vendor.color : "#2a2a2a",
+                    backgroundColor: activeComponent === "die" || activeComponent === "die0" || activeComponent === "die1" ? `${vendor.color}22` : "transparent",
+                  }}
+                >
+                  COMPUTE DIE
+                </button>
+                <button
+                  onMouseEnter={() => setActiveComponent("pcie")}
+                  className={`px-3 py-1 text-[10px] font-mono rounded border transition-colors cursor-pointer ${
+                    activeComponent === "pcie"
+                      ? "text-white"
+                      : "border-[#2a2a2a] text-gray-500 hover:border-gray-500"
+                  }`}
+                  style={{
+                    borderColor: activeComponent === "pcie" ? vendor.color : "#2a2a2a",
+                    backgroundColor: activeComponent === "pcie" ? `${vendor.color}22` : "transparent",
+                  }}
+                >
+                  {activeVendor === "Apple" ? "MEDIA & I/O" : "PCIE INTERFACE"}
                 </button>
               </div>
 
@@ -362,7 +404,7 @@ export default function App() {
                             borderColor: activeComponent === "hbm" ? vendor.color : "#333",
                           }}
                         >
-                          <span className="text-[10px] font-mono text-gray-500 rotate-[-90deg]">HBM</span>
+                          <span className="text-[10px] font-mono text-gray-500 rotate-[-90deg]">{activeVendor === "Apple" ? "UMA" : "HBM"}</span>
                         </div>
                       ))}
                     </div>
@@ -441,7 +483,7 @@ export default function App() {
                               }`}
                               style={{ color: activeComponent === "hbi" ? vendor.color : undefined }}
                             >
-                              {activeVendor === "NVIDIA" ? "NV-HBI" : "IF-LINK"}
+                              {activeVendor === "NVIDIA" ? "NV-HBI" : activeVendor === "Apple" ? "ULTRAFUSION" : "IF-LINK"}
                             </div>
                           </div>
 
@@ -514,7 +556,7 @@ export default function App() {
                             borderColor: activeComponent === "hbm" ? vendor.color : "#333",
                           }}
                         >
-                          <span className="text-[10px] font-mono text-gray-500 rotate-[90deg]">HBM</span>
+                          <span className="text-[10px] font-mono text-gray-500 rotate-[90deg]">{activeVendor === "Apple" ? "UMA" : "HBM"}</span>
                         </div>
                       ))}
                     </div>
@@ -540,7 +582,7 @@ export default function App() {
                           }`}
                           style={{ color: activeComponent === "nvlink" ? vendor.color : undefined }}
                         >
-                          {activeVendor === "NVIDIA" ? "NVLink Interconnect" : "Infinity Fabric"}
+                          {activeVendor === "NVIDIA" ? "NVLink Interconnect" : activeVendor === "AMD" ? "Infinity Fabric" : activeVendor === "Apple" ? "UltraFusion / Fabric" : "Interconnect"}
                         </span>
                       </div>
                     </div>
@@ -560,7 +602,7 @@ export default function App() {
                         }`}
                         style={{ color: activeComponent === "pcie" ? vendor.color : undefined }}
                       >
-                        PCIe Interface
+                        {activeVendor === "Apple" ? "Media Engine & I/O" : "PCIe Interface"}
                       </span>
                     </div>
                   </div>
