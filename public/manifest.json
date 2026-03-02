@@ -2,22 +2,17 @@
   "name": "GPU Architecture Explorer",
   "short_name": "GPU Explorer",
   "description": "Interactive comparison of GPU architectures from NVIDIA, AMD, and Apple M-series. Explore GPU specs, cluster configurations, HPC systems, and network architectures.",
-  "start_url": "/",
-  "scope": "/",
+  "start_url": ".",
+  "scope": ".",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
   "categories": ["education", "utilities"],
   "icons": [
     {
-      "src": "/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
+      "src": "favicon.ico",
+      "sizes": "16x16 32x32",
+      "type": "image/x-icon"
     }
   ]
 }
