@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://pantherland.github.io/gpu-architecture-explorer/sitemap.xml
