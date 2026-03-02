@@ -29,7 +29,7 @@ function Root() {
     }
   }, [pathname]);
 
-  const navigateTo = (nextPath: string, replace = false) => {
+  const navigateTo = (nextPath: string, replace = false, scrollToTop = !replace) => {
     if (window.location.pathname === nextPath) {
       return;
     }
@@ -41,7 +41,10 @@ function Root() {
     }
 
     setPathname(nextPath);
-    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+
+    if (scrollToTop) {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    }
   };
 
   const routeState = parseExplorerPath(pathname);
