@@ -52,6 +52,7 @@ export default function App({
   
   // GPU Data
   const gpuConfig = vendor.gpus[activeGpu] || Object.values(vendor.gpus)[0];
+  const chipletDiagram = gpuConfig?.chipletDiagram;
   
   // Network Data
   const availableNetworks = viewMode === "network" ? networkData.filter(n => n.vendor === activeVendor) : [];
@@ -583,7 +584,7 @@ export default function App({
                           </div>
                         </div>
                       ) : (
-                        /* Chiplet Layout (MI300X) */
+                        /* Chiplet Layout */
                         <div
                           className={`flex-1 rounded-xl border flex flex-col overflow-hidden transition-all duration-300 cursor-crosshair ${
                             activeComponent === "die" ? "z-20 shadow-[0_0_20px_rgba(255,255,255,0.1)]" : "z-10 bg-[#1a1a1a]"
@@ -595,19 +596,52 @@ export default function App({
                           onMouseEnter={() => setActiveComponent("die")}
                         >
                           <div className="bg-[#222] text-center py-1 text-[10px] font-mono border-b border-[#333] text-gray-400">
-                            CHIPLET GRID (XCD + IOD)
+                            {chipletDiagram?.title ?? "CHIPLET GRID (8 XCD)"}
                           </div>
-                          <div className="flex-1 p-4 grid grid-cols-4 grid-rows-2 gap-2">
-                            {Array.from({ length: 8 }).map((_, i) => (
+                          <div className="flex-1 p-4 flex flex-col gap-3">
+                            <div
+                              className="flex-1 grid gap-2"
+                              style={{
+                                gridTemplateColumns: `repeat(${chipletDiagram?.xcdColumns ?? 4}, minmax(0, 1fr))`,
+                              }}
+                            >
+                              {Array.from({ length: chipletDiagram?.xcdCount ?? 8 }).map((_, i) => (
+                                <div
+                                  key={`xcd-${i}`}
+                                  className={`rounded-sm border border-[#333] bg-[#222] flex items-center justify-center transition-all duration-300 ${
+                                    activeComponent === "die" ? "border-white/20" : ""
+                                  }`}
+                                >
+                                  <span className="text-[8px] font-mono text-gray-600">XCD</span>
+                                </div>
+                              ))}
+                            </div>
+                            {chipletDiagram?.iodCount && gpuConfig.components.pcie ? (
                               <div
-                                key={`xcd-${i}`}
-                                className={`rounded-sm border border-[#333] bg-[#222] flex items-center justify-center transition-all duration-300 ${
-                                  activeComponent === "die" ? "border-white/20" : ""
-                                }`}
+                                className="grid gap-2"
+                                style={{
+                                  gridTemplateColumns: `repeat(${chipletDiagram.iodCount}, minmax(0, 1fr))`,
+                                }}
+                                onMouseEnter={() => setActiveComponent("pcie")}
                               >
-                                <span className="text-[8px] font-mono text-gray-600">XCD</span>
+                                {Array.from({ length: chipletDiagram.iodCount }).map((_, i) => (
+                                  <div
+                                    key={`iod-${i}`}
+                                    className={`rounded-sm border px-2 py-2 bg-[#191919] flex items-center justify-center transition-all duration-300 ${
+                                      activeComponent === "pcie" ? "shadow-[0_0_10px_rgba(255,255,255,0.08)]" : ""
+                                    }`}
+                                    style={{ borderColor: activeComponent === "pcie" ? vendor.color : "#333" }}
+                                  >
+                                    <span
+                                      className="text-[8px] font-mono"
+                                      style={{ color: activeComponent === "pcie" ? vendor.color : "#6b7280" }}
+                                    >
+                                      {chipletDiagram.iodLabel ?? "IOD"}
+                                    </span>
+                                  </div>
+                                ))}
                               </div>
-                            ))}
+                            ) : null}
                           </div>
                         </div>
                       )}

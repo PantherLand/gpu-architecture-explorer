@@ -17,6 +17,14 @@ export type ComponentData = {
 
 export type GPULayout = "single" | "dual" | "chiplet";
 
+export type GPUChipletDiagram = {
+  title?: string;
+  xcdCount: number;
+  xcdColumns?: number;
+  iodCount?: number;
+  iodLabel?: string;
+};
+
 export type GPUConfig = {
   id: string;
   name: string;
@@ -24,6 +32,7 @@ export type GPUConfig = {
   process: string;
   layout: GPULayout;
   hbmStacks: number;
+  chipletDiagram?: GPUChipletDiagram;
   components: Record<string, ComponentData>;
 };
 

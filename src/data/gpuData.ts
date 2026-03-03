@@ -583,6 +583,79 @@ export const vendorConfigs: Record<string, VendorConfig> = {
           },
         },
       },
+      MI350X: {
+        id: "MI350X",
+        name: "Instinct MI350X",
+        generation: "CDNA 4",
+        process: "TSMC 3nm/6nm",
+        layout: "chiplet",
+        hbmStacks: 8,
+        chipletDiagram: {
+          title: "CHIPLET GRID (8 XCD + 2 IOD)",
+          xcdCount: 8,
+          xcdColumns: 4,
+          iodCount: 2,
+          iodLabel: "IOD",
+        },
+        components: {
+          package: {
+            title: "MI350X Package",
+            desc: "Fourth-generation CDNA accelerator with 8 XCDs, 2 mirrored IODs, and 288 GB of HBM3E.",
+            cost: "OEM / Quote Only",
+            manufacturer: { name: "AMD / TSMC", url: "https://www.amd.com" },
+            stats: [
+              { label: "Transistors", value: "185B" },
+              { label: "TDP", value: "1000W" },
+              { label: "Memory", value: "288 GB HBM3E" },
+            ],
+          },
+          die: {
+            title: "CDNA 4 XCD Array",
+            desc: "8 compute chiplets deliver higher low-precision throughput for large-scale training and inference.",
+            cost: "Integrated",
+            manufacturer: { name: "TSMC", url: "https://www.tsmc.com" },
+            stats: [
+              { label: "Compute Chiplets", value: "8 XCDs" },
+              { label: "FP32 Performance", value: "144 TFLOPS" },
+              { label: "FP8 Performance", value: "4.6 PFLOPS" },
+              { label: "Efficiency", value: "4.60 TFLOPS/W" },
+            ],
+          },
+          hbm: {
+            title: "HBM3E Subsystem",
+            desc: "8 HBM3E stacks lift both capacity and bandwidth for larger model footprints.",
+            cost: "Integrated",
+            manufacturer: { name: "Micron / Samsung / SK Hynix", url: "https://www.micron.com" },
+            stats: [
+              { label: "Total Memory", value: "288 GB" },
+              { label: "Bandwidth", value: "8.0 TB/s" },
+              { label: "Stacks", value: "8" },
+            ],
+          },
+          nvlink: {
+            title: "Infinity Fabric Scale-Up",
+            desc: "7 direct scale-up links raise peer-to-peer bandwidth beyond the MI325X generation.",
+            cost: "Included",
+            manufacturer: { name: "AMD", url: "https://www.amd.com" },
+            stats: [
+              { label: "Bandwidth", value: "1.08 TB/s" },
+              { label: "Per Link", value: "153.6 GB/s" },
+              { label: "Links", value: "7" },
+            ],
+          },
+          pcie: {
+            title: "PCIe Gen 5 Host I/O",
+            desc: "Two mirrored IODs expose the host interface and package I/O for OAM server integrations.",
+            cost: "Integrated",
+            manufacturer: { name: "AMD", url: "https://www.amd.com" },
+            stats: [
+              { label: "I/O Dies", value: "2 mirrored" },
+              { label: "Host Link", value: "PCIe 5.0 x16" },
+              { label: "Bandwidth", value: "128 GB/s" },
+            ],
+          },
+        },
+      },
     }
   },
   Google: {
