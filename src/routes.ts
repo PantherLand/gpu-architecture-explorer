@@ -3,7 +3,7 @@ import { vendorConfigs } from "./data/gpuData";
 import { networkData } from "./data/networkData";
 import { type Vendor } from "./types";
 
-export type ViewMode = "gpu" | "cluster" | "hpc" | "network";
+export type ViewMode = "gpu" | "cluster" | "hpc" | "network" | "pricing";
 
 export type ExplorerRouteState = {
   viewMode: ViewMode;
@@ -21,6 +21,7 @@ const VIEW_BASE_PATH: Record<ViewMode, string> = {
   cluster: "/explorer/ai-clusters",
   hpc: "/explorer/hpc-clusters",
   network: "/explorer/network",
+  pricing: "/explorer/pricing",
 };
 
 function slugifyPathSegment(value: string) {
@@ -141,6 +142,24 @@ export function getDefaultExplorerRouteState(viewMode: ViewMode = "gpu"): Explor
 export function normalizeExplorerRouteState(
   input: Partial<ExplorerRouteState> & { viewMode: ViewMode }
 ): ExplorerRouteState {
+  if (input.viewMode === "pricing") {
+    const vendor = pickVendorForGpu(input.vendor);
+    const gpuIds = getGpuIds(vendor);
+    const gpuId = gpuIds.includes(input.gpuId ?? "") ? input.gpuId! : gpuIds[0];
+    const componentId = pickComponentId(getComponentIdsForGpu(vendor, gpuId), input.componentId);
+    const clusterVendor = pickVendorForCluster("ai", vendor);
+    const networkVendor = pickVendorForNetwork(vendor);
+
+    return {
+      viewMode: "pricing",
+      vendor,
+      gpuId,
+      clusterId: getClusterIds("ai", clusterVendor)[0],
+      networkId: getNetworkIds(networkVendor)[0],
+      componentId,
+    };
+  }
+
   if (input.viewMode === "gpu") {
     const vendor = pickVendorForGpu(input.vendor);
     const gpuIds = getGpuIds(vendor);
@@ -218,6 +237,10 @@ export function normalizeExplorerRouteState(
 
 export function buildExplorerPath(state: ExplorerRouteState) {
   const normalized = normalizeExplorerRouteState(state);
+
+  if (normalized.viewMode === "pricing") {
+    return VIEW_BASE_PATH.pricing;
+  }
 
   if (normalized.viewMode === "gpu") {
     return [
@@ -327,6 +350,12 @@ export function parseExplorerPath(pathname: string) {
       vendor: resolvedVendor,
       networkId: resolvedNetworkId,
       componentId,
+    });
+  }
+
+  if (routeType === "pricing") {
+    return normalizeExplorerRouteState({
+      viewMode: "pricing",
     });
   }
 

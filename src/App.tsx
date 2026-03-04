@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Cpu, Info, Network, Layers, ChevronRight, ChevronLeft, Server, Database, Activity, Cable, Zap, Box } from "lucide-react";
+import { Cpu, Info, Network, Layers, ChevronRight, ChevronLeft, Server, Database, Activity, Cable, Zap, Box, DollarSign } from "lucide-react";
 import { vendorConfigs } from "./data/gpuData";
 import { clusterData } from "./data/clusterData";
 import { networkData } from "./data/networkData";
+import { PricingView } from "./components/PricingView";
 import { type ComponentCategory, type Vendor } from "./types";
 import { type ExplorerRouteState, type ViewMode } from "./routes";
 
@@ -39,7 +40,7 @@ export default function App({
   const [activeComponent, setActiveComponent] = useState<string>(routeState?.componentId ?? "package");
 
   // Cluster Data
-  const availableClusters = viewMode === "gpu" || viewMode === "network"
+  const availableClusters = viewMode === "gpu" || viewMode === "network" || viewMode === "pricing"
     ? [] 
     : clusterData.filter(c => 
         (viewMode === "cluster" ? c.clusterType === "ai" : c.clusterType === "hpc") && 
@@ -58,14 +59,20 @@ export default function App({
   const availableNetworks = viewMode === "network" ? networkData.filter(n => n.vendor === activeVendor) : [];
   const networkConfig = availableNetworks.find(n => n.id === activeNetwork) || availableNetworks[0];
 
-  const activeData = viewMode === "gpu" 
+  const activeData = viewMode === "pricing"
+    ? null
+    : viewMode === "gpu" 
     ? (gpuConfig?.components[activeComponent] || gpuConfig?.components["package"])
     : viewMode === "network"
     ? (networkConfig ? (networkConfig.components[activeComponent] || Object.values(networkConfig.components)[0]) : null)
     : (clusterConfig ? (clusterConfig.components[activeComponent] || Object.values(clusterConfig.components)[0]) : null);
 
+  const accentColor = viewMode === "pricing" ? "#00a67e" : vendor.color;
+
   const availableVendors = (["NVIDIA", "AMD", "Google", "Apple"] as Vendor[]).filter(v => {
-    if (viewMode === "gpu") {
+    if (viewMode === "pricing") {
+      return false;
+    } else if (viewMode === "gpu") {
       return Object.keys(vendorConfigs[v].gpus).length > 0;
     } else if (viewMode === "network") {
       return networkData.some(n => n.vendor === v);
@@ -122,6 +129,10 @@ export default function App({
 
   const applyViewMode = (mode: ViewMode) => {
     setViewMode(mode);
+    if (mode === "pricing") {
+      return;
+    }
+
     if (mode === "gpu") {
       const firstGpuId = Object.keys(vendorConfigs[activeVendor].gpus)[0];
       if (firstGpuId) {
@@ -163,6 +174,10 @@ export default function App({
 
     if (routeState.viewMode !== viewMode) {
       setViewMode(routeState.viewMode);
+    }
+
+    if (routeState.viewMode === "pricing") {
+      return;
     }
 
     if (routeState.vendor !== activeVendor) {
@@ -260,20 +275,44 @@ export default function App({
               >
                 <Network size={14} /> NETWORK ARCH
               </button>
+              <button
+                onClick={() => handleViewModeChange("pricing")}
+                className={`px-4 py-1.5 rounded-md text-[10px] font-bold transition-all flex items-center gap-2 ${
+                  viewMode === "pricing" ? "bg-[#333] text-white" : "text-gray-500 hover:text-gray-300"
+                }`}
+              >
+                <DollarSign size={14} /> PRICING
+              </button>
             </div>
           </div>
           <div>
             <h1 className="text-4xl md:text-5xl font-bold tracking-tighter text-white mb-2">
-              {viewMode === "gpu" ? "CHIP" : viewMode === "hpc" ? "HPC CLUSTER" : viewMode === "network" ? "NETWORK" : "AI CLUSTER"}{" "}
-              <span style={{ color: vendor.color }}>ARCHITECTURE</span> EXPLORER
+              {viewMode === "pricing" ? (
+                <>
+                  RENTAL <span style={{ color: accentColor }}>PRICING</span> EXPLORER
+                </>
+              ) : (
+                <>
+                  {viewMode === "gpu" ? "CHIP" : viewMode === "hpc" ? "HPC CLUSTER" : viewMode === "network" ? "NETWORK" : "AI CLUSTER"}{" "}
+                  <span style={{ color: accentColor }}>ARCHITECTURE</span> EXPLORER
+                </>
+              )}
             </h1>
             <p className="text-gray-500 font-mono text-sm tracking-widest uppercase">
-              Interactive Comparison // {activeVendor} {viewMode === "gpu" ? gpuConfig.generation : viewMode === "network" ? networkConfig?.name : clusterConfig?.name}
+              {viewMode === "pricing"
+                ? "GPU CLOUD PROVIDERS & PRICING"
+                : `Interactive Comparison // ${activeVendor} ${
+                    viewMode === "gpu"
+                      ? gpuConfig.generation
+                      : viewMode === "network"
+                      ? networkConfig?.name
+                      : clusterConfig?.name
+                  }`}
             </p>
           </div>
 
           {/* Vendor Selector */}
-          {viewMode !== "hpc" && (
+          {viewMode !== "hpc" && viewMode !== "pricing" && (
             <div className="flex gap-2 p-1 bg-[#1a1a1a] rounded-lg border border-[#2a2a2a] w-fit">
               {availableVendors.map((v) => (
                 <button
@@ -293,69 +332,76 @@ export default function App({
         </div>
 
         {/* Selection Tabs */}
-        <div className="flex flex-wrap gap-2">
-          {viewMode === "gpu" ? (
-            Object.keys(vendor.gpus).map((gpuId) => (
-              <button
-                key={gpuId}
-                onClick={() => handleGpuChange(gpuId)}
-                className={`px-4 py-2 text-xs font-mono rounded border transition-all ${
-                  activeGpu === gpuId
-                    ? `text-white bg-opacity-20 shadow-[0_0_15px_rgba(255,255,255,0.1)]`
-                    : "border-[#2a2a2a] text-gray-500 hover:border-gray-400"
-                }`}
-                style={{
-                  borderColor: activeGpu === gpuId ? vendor.color : "#2a2a2a",
-                  backgroundColor: activeGpu === gpuId ? `${vendor.color}22` : "transparent",
-                  color: activeGpu === gpuId ? vendor.color : undefined,
-                }}
-              >
-                {gpuId}
-              </button>
-            ))
-          ) : viewMode === "network" ? (
-            availableNetworks.map((network) => (
-              <button
-                key={network.id}
-                onClick={() => handleNetworkChange(network.id)}
-                className={`px-4 py-2 text-xs font-mono rounded border transition-all ${
-                  activeNetwork === network.id
-                    ? `text-white bg-opacity-20 shadow-[0_0_15px_rgba(255,255,255,0.1)]`
-                    : "border-[#2a2a2a] text-gray-500 hover:border-gray-400"
-                }`}
-                style={{
-                  borderColor: activeNetwork === network.id ? vendor.color : "#2a2a2a",
-                  backgroundColor: activeNetwork === network.id ? `${vendor.color}22` : "transparent",
-                  color: activeNetwork === network.id ? vendor.color : undefined,
-                }}
-              >
-                {network.name}
-              </button>
-            ))
-          ) : (
-            availableClusters.map((cluster) => (
-              <button
-                key={cluster.id}
-                onClick={() => handleClusterChange(cluster.id)}
-                className={`px-4 py-2 text-xs font-mono rounded border transition-all ${
-                  activeCluster === cluster.id
-                    ? `text-white bg-opacity-20 shadow-[0_0_15px_rgba(255,255,255,0.1)]`
-                    : "border-[#2a2a2a] text-gray-500 hover:border-gray-400"
-                }`}
-                style={{
-                  borderColor: activeCluster === cluster.id ? vendor.color : "#2a2a2a",
-                  backgroundColor: activeCluster === cluster.id ? `${vendor.color}22` : "transparent",
-                  color: activeCluster === cluster.id ? vendor.color : undefined,
-                }}
-              >
-                {cluster.name}
-              </button>
-            ))
-          )}
-        </div>
+        {viewMode !== "pricing" && (
+          <div className="flex flex-wrap gap-2">
+            {viewMode === "gpu" ? (
+              Object.keys(vendor.gpus).map((gpuId) => (
+                <button
+                  key={gpuId}
+                  onClick={() => handleGpuChange(gpuId)}
+                  className={`px-4 py-2 text-xs font-mono rounded border transition-all ${
+                    activeGpu === gpuId
+                      ? `text-white bg-opacity-20 shadow-[0_0_15px_rgba(255,255,255,0.1)]`
+                      : "border-[#2a2a2a] text-gray-500 hover:border-gray-400"
+                  }`}
+                  style={{
+                    borderColor: activeGpu === gpuId ? vendor.color : "#2a2a2a",
+                    backgroundColor: activeGpu === gpuId ? `${vendor.color}22` : "transparent",
+                    color: activeGpu === gpuId ? vendor.color : undefined,
+                  }}
+                >
+                  {gpuId}
+                </button>
+              ))
+            ) : viewMode === "network" ? (
+              availableNetworks.map((network) => (
+                <button
+                  key={network.id}
+                  onClick={() => handleNetworkChange(network.id)}
+                  className={`px-4 py-2 text-xs font-mono rounded border transition-all ${
+                    activeNetwork === network.id
+                      ? `text-white bg-opacity-20 shadow-[0_0_15px_rgba(255,255,255,0.1)]`
+                      : "border-[#2a2a2a] text-gray-500 hover:border-gray-400"
+                  }`}
+                  style={{
+                    borderColor: activeNetwork === network.id ? vendor.color : "#2a2a2a",
+                    backgroundColor: activeNetwork === network.id ? `${vendor.color}22` : "transparent",
+                    color: activeNetwork === network.id ? vendor.color : undefined,
+                  }}
+                >
+                  {network.name}
+                </button>
+              ))
+            ) : (
+              availableClusters.map((cluster) => (
+                <button
+                  key={cluster.id}
+                  onClick={() => handleClusterChange(cluster.id)}
+                  className={`px-4 py-2 text-xs font-mono rounded border transition-all ${
+                    activeCluster === cluster.id
+                      ? `text-white bg-opacity-20 shadow-[0_0_15px_rgba(255,255,255,0.1)]`
+                      : "border-[#2a2a2a] text-gray-500 hover:border-gray-400"
+                  }`}
+                  style={{
+                    borderColor: activeCluster === cluster.id ? vendor.color : "#2a2a2a",
+                    backgroundColor: activeCluster === cluster.id ? `${vendor.color}22` : "transparent",
+                    color: activeCluster === cluster.id ? vendor.color : undefined,
+                  }}
+                >
+                  {cluster.name}
+                </button>
+              ))
+            )}
+          </div>
+        )}
       </header>
 
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-8">
+      {viewMode === "pricing" ? (
+        <div className="flex-1 tech-border rounded-xl p-6 md:p-8">
+          <PricingView />
+        </div>
+      ) : (
+        <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Diagram Area */}
         <div className="lg:col-span-2 flex flex-col items-center justify-center relative min-h-[600px] tech-border rounded-xl p-8 overflow-hidden">
           {viewMode === "gpu" ? (
@@ -1055,7 +1101,8 @@ export default function App({
             </AnimatePresence>
           )}
         </div>
-      </div>
+        </div>
+      )}
     </div>
   );
 }
